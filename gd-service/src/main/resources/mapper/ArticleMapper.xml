@@ -34,4 +34,20 @@
           and a.is_delete = 0
           and a.id = #{articleId}
     </select>
+    <!--查询校园动态-->
+    <select id="queryArticleOfSchool" parameterType="Long" resultType="com.project.vo.article.QueryArticleVO">
+        select u.user_name,
+               u.user_avatar,
+               a.id,
+               a.user_id,
+               a.article_content,
+               a.article_photos,
+               a.create_time
+        from user u
+                 join article a on u.id = a.user_id
+        where u.is_delete = 0
+          and a.is_delete = 0
+          and a.user_id != #{userId}
+        order by a.create_time desc
+    </select>
 </mapper>

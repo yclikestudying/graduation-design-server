@@ -3,6 +3,7 @@ package com.project.controller;
 import com.project.common.BaseResponse;
 import com.project.service.ArticleService;
 import com.project.vo.article.QueryArticleVO;
+import com.project.vo.user.QueryUserVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
@@ -100,5 +101,15 @@ public class ArticleController {
     public BaseResponse<String> deleteArticle(@RequestParam("articleId") Long articleId) {
         boolean result = articleService.deleteArticle(articleId);
         return result ? BaseResponse.success() : BaseResponse.fail();
+    }
+
+    /**
+     * 查询校园动态
+     */
+    @GetMapping("/queryArticleOfSchool")
+    @ApiOperation(value = "查询校园动态")
+    public BaseResponse<List<QueryArticleVO>> queryArticleOfSchool() {
+        List<QueryArticleVO> list = articleService.queryArticleOfSchool();
+        return BaseResponse.success(list);
     }
 }

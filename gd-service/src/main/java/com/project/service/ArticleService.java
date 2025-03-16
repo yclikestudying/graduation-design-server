@@ -30,4 +30,9 @@ public interface ArticleService extends IService<Article> {
      * @param articleId 动态id
      */
     boolean deleteArticle(Long articleId);
+
+    /**
+     * 查询校园动态
+     */
+    List<QueryArticleVO> queryArticleOfSchool();
 }

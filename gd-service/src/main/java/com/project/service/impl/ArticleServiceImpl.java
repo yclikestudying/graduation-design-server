@@ -141,4 +141,20 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
             throw new RuntimeException(e);
         }
     }
+
+    /**
+     * 查询校园动态
+     */
+    @Override
+    public List<QueryArticleVO> queryArticleOfSchool() {
+        // 获取自己的id
+        Long userId = UserContext.getUserId();
+        // 查询数据库记录
+        try {
+            return articleMapper.queryArticleOfSchool(userId);
+        } catch (Exception e) {
+            log.error("查询校园动态----->数据库查询失败");
+            throw new RuntimeException(e);
+        }
+    }
 }

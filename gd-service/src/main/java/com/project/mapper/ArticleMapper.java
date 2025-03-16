@@ -18,4 +18,8 @@ public interface ArticleMapper extends BaseMapper<Article> {
      * @param articleId 动态id
      */
     QueryArticleVO queryOne(@Param("articleId") Long articleId);
+    /**
+     * 查询校园动态
+     */
+    List<QueryArticleVO> queryArticleOfSchool(@Param("userId") Long userId);
 }
