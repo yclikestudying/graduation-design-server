@@ -8,4 +8,9 @@ public interface FriendService extends IService<Friend> {
      * 添加关注
      */
     boolean add(Long followerId, Long followedId);
+
+    /**
+     * 取消关注
+     */
+    boolean cancel(Long followerId, Long followeeId);
 }

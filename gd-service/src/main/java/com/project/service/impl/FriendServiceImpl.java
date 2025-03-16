@@ -44,4 +44,25 @@ public class FriendServiceImpl extends ServiceImpl<FriendMapper, Friend>
             throw new RuntimeException(e);
         }
     }
+
+    /**
+     * 取消关注
+     */
+    @Override
+    public boolean cancel(Long followerId, Long followeeId) {
+        // 查询数据库中是否已有
+        Friend one = friendMapper.selectOne(new QueryWrapper<Friend>().eq("follower_id", followerId)
+                .eq("followee_id", followeeId));
+        if (one == null) {
+            log.error("取消关注----->用户还未关注");
+            throw new BusinessExceptionHandler(400, "用户还未关注");
+        }
+        try {
+            return friendMapper.delete(new QueryWrapper<Friend>().eq("follower_id", followerId)
+                    .eq("followee_id", followeeId)) > 0;
+        } catch (Exception e) {
+            log.error("取消关注----->数据库报错");
+            throw new RuntimeException(e);
+        }
+    }
 }
