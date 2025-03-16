@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.mapper.ArticleMapper">
+    <!--查询用户动态-->
+    <select id="queryUser" parameterType="Long" resultType="com.project.vo.article.QueryArticleVO">
+        select u.user_name,
+               u.user_avatar,
+               a.id,
+               a.user_id,
+               a.article_content,
+               a.article_photos,
+               a.create_time
+        from user u
+                 join article a on u.id = a.user_id
+        where u.is_delete = 0
+          and a.is_delete = 0
+          and a.user_id = #{userId}
+        order by a.create_time desc
+    </select>
+    <!--指定id查询动态信息-->
+    <select id="queryOne" parameterType="Long" resultType="com.project.vo.article.QueryArticleVO">
+        select u.user_name,
+               u.user_avatar,
+               a.id,
+               a.user_id,
+               a.article_content,
+               a.article_photos,
+               a.create_time
+        from user u
+                 join article a on u.id = a.user_id
+        where u.is_delete = 0
+          and a.is_delete = 0
+          and a.id = #{articleId}
+    </select>
+</mapper>

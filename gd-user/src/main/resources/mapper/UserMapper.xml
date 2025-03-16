@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.mapper.UserMapper">
+    <!--用户名模糊查询用户-->
+    <select id="queryUser" resultType="com.project.vo.user.QueryUserVO">
+        select id,
+               user_name,
+               user_avatar,
+               user_profile
+        from user
+        where is_delete = 0
+          and id != #{userId}
+          and user_name like concat('%', #{keyword}, '%')
+    </select>
+    <!--头像地址保存至avatar表-->
+    <insert id="saveAvatar">
+        INSERT INTO avatar (user_id, avatar)
+        VALUES (#{userId}, #{avatar})
+    </insert>
+</mapper>
