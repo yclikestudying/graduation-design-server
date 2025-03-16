@@ -36,8 +36,20 @@ create table article
 create table if not exists avatar
 (
     id          bigint auto_increment primary key comment '主键',
-    user_id     bigint not null comment '用户id',
+    user_id     bigint                             not null comment '用户id',
     avatar      varchar(1024)                      not null comment '头像地址',
     create_time datetime default CURRENT_TIMESTAMP null comment '创建时间',
     is_delete   tinyint  default 0                 null comment '0-存在 1-删除'
+);
+
+# 关系表
+create table if not exists friend
+(
+    id          bigint auto_increment comment '主键'
+        primary key,
+    follower_id bigint                             not null comment '关注者id',
+    followee_id bigint                             not null comment '被关注者id',
+    create_time datetime default CURRENT_TIMESTAMP null comment '建立关系时间',
+    is_delete   int      default 0                 null comment '0-存在，1-删除'
 )
+    comment '关系表';
