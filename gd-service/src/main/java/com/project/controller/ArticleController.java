@@ -112,4 +112,14 @@ public class ArticleController {
         List<QueryArticleVO> list = articleService.queryArticleOfSchool();
         return BaseResponse.success(list);
     }
+
+    /**
+     * 查询我的动态数量
+     */
+    @GetMapping("/articleCount")
+    @ApiOperation(value = "查询我的动态数量")
+    public BaseResponse<Integer> articleCount() {
+        Integer count = articleService.articleCount();
+        return BaseResponse.success(count);
+    }
 }

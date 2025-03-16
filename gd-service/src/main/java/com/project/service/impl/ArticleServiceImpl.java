@@ -1,5 +1,6 @@
 package com.project.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.gson.Gson;
 import com.project.domain.Article;
@@ -12,7 +13,6 @@ import com.project.utils.UserContext;
 import com.project.vo.article.QueryArticleVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -154,6 +154,22 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
             return articleMapper.queryArticleOfSchool(userId);
         } catch (Exception e) {
             log.error("查询校园动态----->数据库查询失败");
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * 查询我的动态数量
+     */
+    @Override
+    public Integer articleCount() {
+        // 获取我的id
+        Long userId = UserContext.getUserId();
+        // 查询数据库
+        try {
+            return articleMapper.selectCount(new QueryWrapper<Article>().eq("user_id", userId));
+        } catch (Exception e) {
+            log.error("查询我的动态数量----->数据库查询失败");
             throw new RuntimeException(e);
         }
     }

@@ -35,4 +35,9 @@ public interface ArticleService extends IService<Article> {
      * 查询校园动态
      */
     List<QueryArticleVO> queryArticleOfSchool();
+
+    /**
+     * 查询我的动态数量
+     */
+    Integer articleCount();
 }
