@@ -18,6 +18,9 @@
         <if test="userId != null">
             and e.user_id = #{userId}
         </if>
+        <if test="keyword != null">
+            and e.express_content like concat('%', #{keyword}, '%')
+        </if>
         order by e.create_time desc
     </select>
 </mapper>

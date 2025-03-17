@@ -11,5 +11,5 @@ public interface ExpressMapper extends BaseMapper<Express> {
     /**
      * 查询自己的跑腿任务
      */
-    List<QueryExpressVO> queryExpress(@Param("userId") Long userId);
+    List<QueryExpressVO> queryExpress(@Param("userId") Long userId, @Param("keyword") String keyword);
 }

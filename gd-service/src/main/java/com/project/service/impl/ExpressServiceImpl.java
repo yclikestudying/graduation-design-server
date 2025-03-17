@@ -53,7 +53,7 @@ public class ExpressServiceImpl extends ServiceImpl<ExpressMapper, Express>
         userId = checkUserId(userId);
         // 查询数据库
         try {
-            return expressMapper.queryExpress(userId);
+            return expressMapper.queryExpress(userId, null);
         } catch (Exception e) {
             log.error("查询自己的跑腿任务 -----> 数据库查询失败");
             throw new RuntimeException(e);
@@ -67,7 +67,7 @@ public class ExpressServiceImpl extends ServiceImpl<ExpressMapper, Express>
     public List<QueryExpressVO> queryAllExpress() {
         // 查询数据库
         try {
-            return expressMapper.queryExpress(null);
+            return expressMapper.queryExpress(null, null);
         } catch (Exception e) {
             log.error("查询自己的跑腿任务 -----> 数据库查询失败");
             throw new RuntimeException(e);
@@ -86,6 +86,25 @@ public class ExpressServiceImpl extends ServiceImpl<ExpressMapper, Express>
             return expressMapper.deleteById(expressId) > 0;
         } catch (Exception e) {
             log.error("根据id删除跑腿任务----->数据库删除失败");
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * 关键字模糊查询跑腿任务
+     */
+    @Override
+    public List<QueryExpressVO> queryExpressByKeyword(String keyword) {
+        // 校验
+        if (StringUtils.isBlank(keyword)) {
+            log.error("关键字模糊查询跑腿任务 -----> 参数错误");
+            throw new BusinessExceptionHandler(400, "参数错误");
+        }
+        // 查询数据库
+        try {
+            return expressMapper.queryExpress(null, keyword);
+        } catch (Exception e) {
+            log.error("关键字模糊查询跑腿任务 -----> 数据库查询失败");
             throw new RuntimeException(e);
         }
     }

@@ -26,4 +26,9 @@ public interface ExpressService extends IService<Express> {
      * 根据id删除跑腿任务
      */
     boolean deleteExpress(Long expressId);
+
+    /**
+     * 关键字模糊查询跑腿任务
+     */
+    List<QueryExpressVO> queryExpressByKeyword(String keyword);
 }

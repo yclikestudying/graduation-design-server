@@ -2,6 +2,7 @@ package com.project.controller;
 
 import com.project.common.BaseResponse;
 import com.project.service.ExpressService;
+import com.project.vo.article.QueryArticleVO;
 import com.project.vo.express.QueryExpressVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -56,5 +57,15 @@ public class ExpressController {
     public BaseResponse<String> deleteExpress(@RequestParam("expressId") Long expressId) {
         boolean result = expressService.deleteExpress(expressId);
         return result ? BaseResponse.success() : BaseResponse.fail();
+    }
+
+    /**
+     * 关键字模糊查询跑腿任务
+     */
+    @GetMapping("/queryExpressByKeyword")
+    @ApiOperation(value = "关键字模糊查询跑腿任务")
+    public BaseResponse<List<QueryExpressVO>> queryExpressByKeyword(@RequestParam("keyword") String keyword) {
+        List<QueryExpressVO> list = expressService.queryExpressByKeyword(keyword);
+        return BaseResponse.success(list);
     }
 }
