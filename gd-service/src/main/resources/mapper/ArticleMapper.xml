@@ -60,19 +60,20 @@
     <!--指定关注用户动态信息-->
     <select id="queryArticleOfAttention" parameterType="Long" resultType="com.project.vo.article.QueryArticleVO">
         select u.user_name,
-               u.user_avatar,
-               a.id,
-               a.user_id,
-               a.article_content,
-               a.article_photos,
-               a.create_time
+        u.user_avatar,
+        a.id,
+        a.user_id,
+        a.article_content,
+        a.article_photos,
+        a.create_time
         from user u
-                 join article a on u.id = a.user_id
+        join article a on u.id = a.user_id
         where u.is_delete = 0
-          and a.is_delete = 0
-          and a.user_id in
+        and a.is_delete = 0
+        and a.user_id in
         <foreach collection="idList" item="id" open="(" separator="," close=")">
             #{id}
         </foreach>
+        order by a.create_time desc
     </select>
 </mapper>

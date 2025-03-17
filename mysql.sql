@@ -53,3 +53,18 @@ create table if not exists friend
     is_delete   int      default 0                 null comment '0-存在，1-删除'
 )
     comment '关系表';
+
+# 商品表
+create table if not exists goods
+(
+    id              bigint auto_increment comment '主键'
+        primary key,
+    user_id         bigint                             not null comment '发表用户id',
+    goods_content   text                               null comment '商品内容',
+    goods_photos    varchar(10240)                     null comment '商品图片',
+    goods_old_price int                                null comment '商品原价格',
+    goods_price     int                                null comment '商品新价格',
+    create_time     datetime default CURRENT_TIMESTAMP null comment '创建时间',
+    is_show         tinyint  default 1                 not null comment '1-同意，0-拒绝',
+    is_delete       tinyint  default 0                 not null comment '0-存在 1-已删除'
+);
