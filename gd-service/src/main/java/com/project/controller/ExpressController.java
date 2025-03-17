@@ -32,7 +32,7 @@ public class ExpressController {
     /**
      * 查询自己的跑腿任务
      */
-    @PostMapping("/queryExpress")
+    @GetMapping("/queryExpress")
     @ApiOperation(value = "查询自己的跑腿任务")
     public BaseResponse<List<QueryExpressVO>> queryExpress(@RequestParam(value = "userId", required = false) Long userId) {
         List<QueryExpressVO> list = expressService.queryExpress(userId);
@@ -42,7 +42,7 @@ public class ExpressController {
     /**
      * 查询所有跑腿任务
      */
-    @PostMapping("/queryAllExpress")
+    @GetMapping("/queryAllExpress")
     @ApiOperation(value = "查询所有跑腿任务")
     public BaseResponse<List<QueryExpressVO>> queryAllExpress() {
         List<QueryExpressVO> list = expressService.queryAllExpress();
