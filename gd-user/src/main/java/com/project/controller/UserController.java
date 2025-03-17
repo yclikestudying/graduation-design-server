@@ -143,4 +143,15 @@ public class UserController {
         String avatar = userService.uploadAvatar(userId, file);
         return BaseResponse.success(avatar);
     }
+
+    /**
+     * 查询关注用户
+     * @param userId 用户id
+     */
+    @GetMapping("/queryFriend")
+    @ApiOperation(value = "查询关注用户")
+    public BaseResponse<List<QueryUserVO>> queryFriend(@RequestParam(value = "userId", required = false) Long userId) {
+        List<QueryUserVO> list = userService.queryFriend(userId);
+        return BaseResponse.success(list);
+    }
 }

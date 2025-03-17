@@ -58,4 +58,10 @@ public interface UserService extends IService<User> {
      * @param file 文件数据
      */
     String uploadAvatar(Long userId, MultipartFile file);
+
+    /**
+     * 查询关注用户
+     * @param userId 用户id
+     */
+    List<QueryUserVO> queryFriend(Long userId);
 }

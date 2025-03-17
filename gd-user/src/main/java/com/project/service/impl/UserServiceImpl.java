@@ -126,7 +126,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public UserVO getUser(Long userId) {
         // 判断是查询自己的用户信息还是别人的用户信息
-        userId = userId == null ? UserContext.getUserId() : userId;
+        userId = checkUserId(userId);
         // 查询 Redis 是否存在该用户信息
         String redisKey = RedisConstant.getRedisKey(RedisConstant.USER_INFO, userId);
         String redisData = redisUtil.getRedisData(redisKey);
@@ -155,7 +155,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      */
     @Override
     public boolean userDeleteAccount() {
-        // 获取自己账号id
+        // 获取自己的id
         Long userId = UserContext.getUserId();
         // 数据库删除用户
         int result = userMapper.deleteById(userId);
@@ -272,7 +272,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      */
     @Override
     public List<QueryUserVO> queryUser(String keyword) {
-        // 校验参数
+        // 获取自己的id
         Long userId = UserContext.getUserId();
         if (StringUtils.isBlank(keyword)) {
             log.error("模糊查询用户----->参数不能为空");
@@ -289,7 +289,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public String getAvatar(Long userId) {
         // 校验参数
-        userId = userId == null ? UserContext.getUserId() : userId;
+        userId = checkUserId(userId);
         // 查询 Redis 记录
         String redisKey = RedisConstant.getRedisKey(RedisConstant.USER_INFO, userId);
         String redisData = redisUtil.getRedisData(redisKey);
@@ -349,5 +349,36 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * 查询关注用户
+     * @param userId 用户id
+     */
+    @Override
+    public List<QueryUserVO> queryFriend(Long userId) {
+        userId = checkUserId(userId);
+        // 查询自己关注用户的id
+        List<Long> idList = null;
+        try {
+            idList = userMapper.queryFriendIds(userId);
+        } catch (Exception e) {
+            log.error("查询关注用户 -----> 数据库查询关注用户id失败");
+            throw new RuntimeException(e);
+        }
+        // 根据id查询用户信息
+        try {
+            return userMapper.queryFriend(idList);
+        } catch (Exception e) {
+            log.error("查询关注用户 -----> 数据库查询关注用户信息失败");
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * 校验是根据自己的id还是其他人的id进行操作
+     */
+    private Long checkUserId(Long userId) {
+        return userId == null ? UserContext.getUserId() : userId;
     }
 }

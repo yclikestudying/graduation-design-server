@@ -19,4 +19,27 @@
         INSERT INTO avatar (user_id, avatar)
         VALUES (#{userId}, #{avatar})
     </insert>
+    <!--查询关注用户id-->
+    <select id="queryFriendIds" parameterType="Long" resultType="Long">
+        select followee_id
+        from friend
+        where is_delete = 0
+          and follower_id = #{userId}
+    </select>
+    <!--查询关注用户-->
+    <select id="queryFriend" resultType="com.project.vo.user.QueryUserVO">
+        select distinct
+        u.id,
+        u.user_name,
+        u.user_avatar,
+        u.user_profile
+        from user u
+        join friend f on u.id = f.followee_id
+        where u.is_delete = 0
+        and f.is_delete = 0
+        and u.id in
+        <foreach collection="idList" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
 </mapper>

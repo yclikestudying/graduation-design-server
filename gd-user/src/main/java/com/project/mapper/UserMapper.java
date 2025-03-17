@@ -21,4 +21,14 @@ public interface UserMapper extends BaseMapper<User> {
      * 头像地址保存至avatar表
      */
     boolean saveAvatar(@Param("userId") Long userId, @Param("avatar") String avatar);
+
+    /**
+     * 查询关注用户id
+     */
+    List<Long> queryFriendIds(@Param("userId") Long userId);
+
+    /**
+     * 查询关注用户
+     */
+    List<QueryUserVO> queryFriend(@Param("idList") List<Long> idList);
 }
