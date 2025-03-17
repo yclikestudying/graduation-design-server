@@ -132,4 +132,14 @@ public class ArticleController {
         Integer count = articleService.articleCount();
         return BaseResponse.success(count);
     }
+
+    /**
+     * 关键字模糊查询动态
+     */
+    @GetMapping("/queryArticleByKeyword")
+    @ApiOperation(value = "关键字模糊查询动态")
+    public BaseResponse<List<QueryArticleVO>> queryArticleByKeyword(@RequestParam("keyword") String keyword) {
+        List<QueryArticleVO> list = articleService.queryArticleByKeyword(keyword);
+        return BaseResponse.success(list);
+    }
 }

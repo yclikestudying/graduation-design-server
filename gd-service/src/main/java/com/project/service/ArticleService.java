@@ -46,4 +46,8 @@ public interface ArticleService extends IService<Article> {
      */
     List<QueryArticleVO> queryArticleOfAttention();
 
+    /**
+     * 关键字模糊查询动态
+     */
+    List<QueryArticleVO> queryArticleByKeyword(String keyword);
 }

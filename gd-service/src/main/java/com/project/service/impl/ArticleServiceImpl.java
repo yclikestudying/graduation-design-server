@@ -147,11 +147,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
      */
     @Override
     public List<QueryArticleVO> queryArticleOfSchool() {
-        // 获取自己的id
-        Long userId = UserContext.getUserId();
         // 查询数据库记录
         try {
-            return articleMapper.queryArticleOfSchool(userId);
+            return articleMapper.queryArticleOfSchool();
         } catch (Exception e) {
             log.error("查询校园动态----->数据库查询失败");
             throw new RuntimeException(e);
@@ -197,6 +195,25 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
             return articleMapper.queryArticleOfAttention(idList);
         } catch (Exception e) {
             log.error("查询关注动态 -----> 数据库查询失败");
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * 关键字模糊查询动态
+     */
+    @Override
+    public List<QueryArticleVO> queryArticleByKeyword(String keyword) {
+        // 校验
+        if (StringUtils.isBlank(keyword)) {
+            log.error("关键字模糊查询动态 -----> 参数错误");
+            throw new BusinessExceptionHandler(400, "参数错误");
+        }
+        // 查询数据库
+        try {
+            return articleMapper.queryArticleByKeyword(keyword);
+        } catch (Exception e) {
+            log.error("关键字模糊查询动态 -----> 数据库查询失败");
             throw new RuntimeException(e);
         }
     }

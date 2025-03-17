@@ -21,7 +21,7 @@ public interface ArticleMapper extends BaseMapper<Article> {
     /**
      * 查询校园动态
      */
-    List<QueryArticleVO> queryArticleOfSchool(@Param("userId") Long userId);
+    List<QueryArticleVO> queryArticleOfSchool();
     /**
      * 查询关注用户id
      */
@@ -30,4 +30,8 @@ public interface ArticleMapper extends BaseMapper<Article> {
      * 查询关注动态
      */
     List<QueryArticleVO> queryArticleOfAttention(@Param("idList") List<Long> idList);
+    /**
+     * 关键字模糊查询动态
+     */
+    List<QueryArticleVO> queryArticleByKeyword(@Param("keyword") String keyword);
 }
