@@ -53,22 +53,32 @@ public class FriendController {
     }
 
     /**
-     * 查询我的关注数量
+     * 查询关注数量
      */
     @GetMapping("/friendCount")
-    @ApiOperation(value = "查询我的关注数量")
+    @ApiOperation(value = "查询关注数量")
     public BaseResponse<Integer> friendCount(@RequestParam(value = "userId", required = false) Long userId) {
         Integer count = friendService.friendCount(userId);
         return BaseResponse.success(count);
     }
 
     /**
-     * 查询我的粉丝数量
+     * 查询粉丝数量
      */
     @GetMapping("/fansCount")
-    @ApiOperation(value = "查询我的粉丝数量")
+    @ApiOperation(value = "查询粉丝数量")
     public BaseResponse<Integer> fansCount(@RequestParam(value = "userId", required = false) Long userId) {
         Integer count = friendService.fansCount(userId);
+        return BaseResponse.success(count);
+    }
+
+    /**
+     * 查询互关数量
+     */
+    @GetMapping("/eachCount")
+    @ApiOperation(value = "查询互关数量")
+    public BaseResponse<Integer> eachCount(@RequestParam(value = "userId", required = false) Long userId) {
+        Integer count = friendService.eachCount(userId);
         return BaseResponse.success(count);
     }
 }

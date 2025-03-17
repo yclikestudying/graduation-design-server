@@ -21,12 +21,17 @@ public interface FriendService extends IService<Friend> {
     boolean queryFriend(Long userId);
 
     /**
-     * 查询我的关注数量
+     * 查询关注数量
      */
     Integer friendCount(Long userId);
 
     /**
-     * 查询我的粉丝数量
+     * 查询粉丝数量
      */
     Integer fansCount(Long userId);
+
+    /**
+     * 查询互关数量
+     */
+    Integer eachCount(Long userId);
 }

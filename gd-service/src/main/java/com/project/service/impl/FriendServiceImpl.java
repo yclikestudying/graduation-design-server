@@ -88,7 +88,7 @@ public class FriendServiceImpl extends ServiceImpl<FriendMapper, Friend>
     }
 
     /**
-     * 查询我的关注数量
+     * 查询关注数量
      */
     @Override
     public Integer friendCount(Long userId) {
@@ -96,13 +96,13 @@ public class FriendServiceImpl extends ServiceImpl<FriendMapper, Friend>
         try {
             return friendMapper.selectCount(new QueryWrapper<Friend>().eq("follower_id", userId));
         } catch (Exception e) {
-            log.error("查询我的关注数量 -----> 数据库查询失败");
+            log.error("查询关注数量 -----> 数据库查询失败");
             throw new RuntimeException(e);
         }
     }
 
     /**
-     * 查询我的粉丝数量
+     * 查询粉丝数量
      */
     @Override
     public Integer fansCount(Long userId) {
@@ -110,7 +110,21 @@ public class FriendServiceImpl extends ServiceImpl<FriendMapper, Friend>
         try {
             return friendMapper.selectCount(new QueryWrapper<Friend>().eq("followee_id", userId));
         } catch (Exception e) {
-            log.error("查询我的粉丝数量 -----> 数据库查询失败");
+            log.error("查询粉丝数量 -----> 数据库查询失败");
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * 查询互关数量
+     */
+    @Override
+    public Integer eachCount(Long userId) {
+        userId = checkUserId(userId);
+        try {
+            return friendMapper.eachCount(userId);
+        } catch (Exception e) {
+            log.error("查询互关数量 -----> 数据库查询失败");
             throw new RuntimeException(e);
         }
     }

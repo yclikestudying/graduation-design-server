@@ -3,5 +3,14 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.project.mapper.FriendMapper">
-
+    <!--查询互关数量-->
+    <select id="eachCount" parameterType="Long" resultType="Integer">
+        SELECT count(f1.id)
+        FROM friend f1
+                 JOIN friend f2
+                      ON f1.follower_id = f2.followee_id AND f1.followee_id = f2.follower_id
+        WHERE f1.is_delete = 0
+          AND f2.is_delete = 0
+          AND f1.follower_id = #{userId}
+    </select>
 </mapper>
