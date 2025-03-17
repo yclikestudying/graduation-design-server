@@ -154,4 +154,15 @@ public class UserController {
         List<QueryUserVO> list = userService.queryFriend(userId);
         return BaseResponse.success(list);
     }
+
+    /**
+     * 查询粉丝用户
+     * @param userId 用户id
+     */
+    @GetMapping("/queryFans")
+    @ApiOperation(value = "查询粉丝用户")
+    public BaseResponse<List<QueryUserVO>> queryFans(@RequestParam(value = "userId", required = false) Long userId) {
+        List<QueryUserVO> list = userService.queryFans(userId);
+        return BaseResponse.success(list);
+    }
 }

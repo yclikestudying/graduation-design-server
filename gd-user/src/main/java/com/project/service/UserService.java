@@ -64,4 +64,10 @@ public interface UserService extends IService<User> {
      * @param userId 用户id
      */
     List<QueryUserVO> queryFriend(Long userId);
+
+    /**
+     * 查询粉丝用户
+     * @param userId 用户id
+     */
+    List<QueryUserVO> queryFans(Long userId);
 }

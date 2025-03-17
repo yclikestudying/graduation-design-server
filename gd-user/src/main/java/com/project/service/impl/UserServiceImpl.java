@@ -366,11 +366,43 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             log.error("查询关注用户 -----> 数据库查询关注用户id失败");
             throw new RuntimeException(e);
         }
+        if (idList.isEmpty()) {
+            log.error("查询关注用户 -----> 没有关注");
+            throw new BusinessExceptionHandler(400, "暂无关注");
+        }
         // 根据id查询用户信息
         try {
             return userMapper.queryFriend(idList);
         } catch (Exception e) {
             log.error("查询关注用户 -----> 数据库查询关注用户信息失败");
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * 查询粉丝用户
+     * @param userId 用户id
+     */
+    @Override
+    public List<QueryUserVO> queryFans(Long userId) {
+        userId = checkUserId(userId);
+        // 查询自己粉丝用户的id
+        List<Long> idList = null;
+        try {
+            idList = userMapper.queryFansIds(userId);
+        } catch (Exception e) {
+            log.error("查询粉丝用户 -----> 数据库查询粉丝用户id失败");
+            throw new RuntimeException(e);
+        }
+        if (idList.isEmpty()) {
+            log.error("查询粉丝用户 -----> 没有粉丝");
+            throw new BusinessExceptionHandler(400, "暂无粉丝");
+        }
+        // 根据id查询用户信息
+        try {
+            return userMapper.queryFans(idList);
+        } catch (Exception e) {
+            log.error("查询粉丝用户 -----> 数据库查询粉丝用户信息失败");
             throw new RuntimeException(e);
         }
     }
