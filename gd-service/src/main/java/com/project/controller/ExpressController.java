@@ -47,4 +47,14 @@ public class ExpressController {
         List<QueryExpressVO> list = expressService.queryAllExpress();
         return BaseResponse.success(list);
     }
+
+    /**
+     * 根据id删除跑腿任务
+     */
+    @DeleteMapping("/deleteExpress")
+    @ApiOperation(value = "根据id删除跑腿任务")
+    public BaseResponse<String> deleteExpress(@RequestParam("expressId") Long expressId) {
+        boolean result = expressService.deleteExpress(expressId);
+        return result ? BaseResponse.success() : BaseResponse.fail();
+    }
 }

@@ -74,6 +74,22 @@ public class ExpressServiceImpl extends ServiceImpl<ExpressMapper, Express>
         }
     }
 
+    @Override
+    public boolean deleteExpress(Long expressId) {
+        // 校验参数
+        if (expressId <= 0) {
+            log.error("根据id删除跑腿任务----->参数错误");
+            throw new BusinessExceptionHandler(400, "参数错误");
+        }
+        // 删除数据库动态记录
+        try {
+            return expressMapper.deleteById(expressId) > 0;
+        } catch (Exception e) {
+            log.error("根据id删除跑腿任务----->数据库删除失败");
+            throw new RuntimeException(e);
+        }
+    }
+
     /**
      * 校验是根据自己的id还是其他人的id进行操作
      */
