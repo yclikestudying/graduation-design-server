@@ -29,11 +29,6 @@ public class QueryArticleVO implements Serializable {
     private String userAvatar;
 
     /**
-     * 商品名称
-     */
-    private String goodsTitle;
-
-    /**
      * 动态内容
      */
     private String articleContent;

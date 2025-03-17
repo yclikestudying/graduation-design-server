@@ -25,4 +25,24 @@
         </if>
         ORDER BY g.create_time DESC
     </select>
+    <select id="queryGoodsByKeyword" parameterType="String" resultType="com.project.vo.goods.QueryGoodsVO">
+        select u.user_name,
+               u.user_avatar,
+               g.id,
+               g.user_id,
+               g.goods_title,
+               g.goods_content,
+               g.goods_photos,
+               g.goods_old_price,
+               g.goods_price,
+               g.create_time
+        from user u
+                 join goods g
+                      on u.id = g.user_id
+        where u.is_delete = 0
+          and g.is_delete = 0
+          and (g.goods_content like concat('%', #{keyword}, '%') or g.goods_title like concat('%', #{keyword}, '%'))
+        order by g.create_time
+                desc
+    </select>
 </mapper>

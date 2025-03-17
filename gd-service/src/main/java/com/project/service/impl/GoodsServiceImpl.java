@@ -7,6 +7,7 @@ import com.project.mapper.GoodsMapper;
 import com.project.service.GoodsService;
 import com.project.utils.Upload;
 import com.project.utils.UserContext;
+import com.project.vo.article.QueryArticleVO;
 import com.project.vo.goods.QueryGoodsVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -83,6 +84,25 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods>
             return goodsMapper.queryGoods(null);
         } catch (Exception e) {
             log.error("查询个人商品 -----> 数据库查询失败");
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * 关键字模糊查询商品
+     */
+    @Override
+    public List<QueryGoodsVO> queryGoodsByKeyword(String keyword) {
+        // 校验
+        if (StringUtils.isBlank(keyword)) {
+            log.error("关键字模糊查询商品 -----> 参数错误");
+            throw new BusinessExceptionHandler(400, "参数错误");
+        }
+        // 查询数据库
+        try {
+            return goodsMapper.queryGoodsByKeyword(keyword);
+        } catch (Exception e) {
+            log.error("关键字模糊查询商品 -----> 数据库查询失败");
             throw new RuntimeException(e);
         }
     }

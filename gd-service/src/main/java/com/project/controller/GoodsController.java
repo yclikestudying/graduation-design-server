@@ -2,6 +2,7 @@ package com.project.controller;
 
 import com.project.common.BaseResponse;
 import com.project.service.GoodsService;
+import com.project.vo.article.QueryArticleVO;
 import com.project.vo.goods.QueryGoodsVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -49,6 +50,16 @@ public class GoodsController {
     @ApiOperation(value = "查询全部商品")
     public BaseResponse<List<QueryGoodsVO>> queryAllGoods() {
         List<QueryGoodsVO> list = goodsService.queryAllGoods();
+        return BaseResponse.success(list);
+    }
+
+    /**
+     * 关键字模糊查询商品
+     */
+    @GetMapping("/queryGoodsByKeyword")
+    @ApiOperation(value = "关键字模糊查询商品")
+    public BaseResponse<List<QueryGoodsVO>> queryArticleByKeyword(@RequestParam("keyword") String keyword) {
+        List<QueryGoodsVO> list = goodsService.queryGoodsByKeyword(keyword);
         return BaseResponse.success(list);
     }
 }
