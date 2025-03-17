@@ -57,8 +57,8 @@ public class FriendController {
      */
     @GetMapping("/friendCount")
     @ApiOperation(value = "查询我的关注数量")
-    public BaseResponse<Integer> friendCount() {
-        Integer count = friendService.friendCount(UserContext.getUserId());
+    public BaseResponse<Integer> friendCount(@RequestParam(value = "userId", required = false) Long userId) {
+        Integer count = friendService.friendCount(userId);
         return BaseResponse.success(count);
     }
 
@@ -66,9 +66,9 @@ public class FriendController {
      * 查询我的粉丝数量
      */
     @GetMapping("/fansCount")
-    @ApiOperation(value = "查询我的关注数量")
-    public BaseResponse<Integer> fansCount() {
-        Integer count = friendService.fansCount(UserContext.getUserId());
+    @ApiOperation(value = "查询我的粉丝数量")
+    public BaseResponse<Integer> fansCount(@RequestParam(value = "userId", required = false) Long userId) {
+        Integer count = friendService.fansCount(userId);
         return BaseResponse.success(count);
     }
 }

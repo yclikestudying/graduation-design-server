@@ -92,6 +92,7 @@ public class FriendServiceImpl extends ServiceImpl<FriendMapper, Friend>
      */
     @Override
     public Integer friendCount(Long userId) {
+        userId = checkUserId(userId);
         try {
             return friendMapper.selectCount(new QueryWrapper<Friend>().eq("follower_id", userId));
         } catch (Exception e) {
@@ -105,11 +106,19 @@ public class FriendServiceImpl extends ServiceImpl<FriendMapper, Friend>
      */
     @Override
     public Integer fansCount(Long userId) {
+        userId = checkUserId(userId);
         try {
             return friendMapper.selectCount(new QueryWrapper<Friend>().eq("followee_id", userId));
         } catch (Exception e) {
             log.error("查询我的粉丝数量 -----> 数据库查询失败");
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * 校验是根据自己的id还是其他人的id进行操作
+     */
+    private Long checkUserId(Long userId) {
+        return userId == null ? UserContext.getUserId() : userId;
     }
 }
