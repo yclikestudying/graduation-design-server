@@ -68,3 +68,14 @@ create table if not exists goods
     is_show         tinyint  default 1                 not null comment '1-同意，0-拒绝',
     is_delete       tinyint  default 0                 not null comment '0-存在 1-已删除'
 );
+
+create table if not exists express
+(
+    id              bigint auto_increment comment '主键'
+        primary key,
+    user_id         bigint                             not null comment '发表用户id',
+    express_content text                               null comment '代取内容文本',
+    create_time     datetime default CURRENT_TIMESTAMP null comment '发布时间',
+    is_show         tinyint  default 1                 not null comment '1-同意，0-拒绝',
+    is_delete       tinyint  default 0                 null comment '0-存在 1-已删除'
+);
