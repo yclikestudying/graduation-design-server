@@ -41,4 +41,9 @@ public interface UserMapper extends BaseMapper<User> {
      * 查询粉丝用户
      */
     List<QueryUserVO> queryFans(@Param("idList") List<Long> idList);
+
+    /**
+     * 查询互关用户id
+     */
+    List<Long> queryEach(@Param("userId") Long userId);
 }

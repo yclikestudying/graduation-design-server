@@ -70,4 +70,10 @@ public interface UserService extends IService<User> {
      * @param userId 用户id
      */
     List<QueryUserVO> queryFans(Long userId);
+
+    /**
+     * 查询互关用户
+     * @param userId 用户id
+     */
+    List<QueryUserVO> queryEach(Long userId);
 }

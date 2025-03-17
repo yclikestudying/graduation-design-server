@@ -165,4 +165,15 @@ public class UserController {
         List<QueryUserVO> list = userService.queryFans(userId);
         return BaseResponse.success(list);
     }
+
+    /**
+     * 查询互关用户
+     * @param userId 用户id
+     */
+    @GetMapping("/queryEach")
+    @ApiOperation(value = "查询互关用户")
+    public BaseResponse<List<QueryUserVO>> queryEach(@RequestParam(value = "userId", required = false) Long userId) {
+        List<QueryUserVO> list = userService.queryEach(userId);
+        return BaseResponse.success(list);
+    }
 }

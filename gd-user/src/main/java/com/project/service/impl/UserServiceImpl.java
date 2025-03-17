@@ -25,10 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -405,6 +402,43 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             log.error("查询粉丝用户 -----> 数据库查询粉丝用户信息失败");
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * 查询互关用户
+     * @param userId 用户id
+     */
+    @Override
+    public List<QueryUserVO> queryEach(Long userId) {
+        userId = checkUserId(userId);
+        // 查询互关用户id
+        List<Long> idList = null;
+        try {
+            idList = userMapper.queryEach(userId);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        if (idList.isEmpty()) {
+            log.error("查询互关用户 -----> 没有互关用户");
+            throw new BusinessExceptionHandler(400, "暂无互关用户");
+        }
+        // 根据id查询用户信息
+        List<User> users = null;
+        try {
+            users = userMapper.selectList(new QueryWrapper<User>()
+                    .select("id", "user_name", "user_avatar", "user_profile")
+                    .in("id", idList));
+        } catch (Exception e) {
+            log.error("查询互关用户 -----> 数据库查询失败");
+            throw new RuntimeException(e);
+        }
+        List<QueryUserVO> list = new ArrayList<>();
+        users.forEach(user -> {
+            QueryUserVO queryUserVO = new QueryUserVO();
+            BeanUtils.copyProperties(user, queryUserVO);
+            list.add(queryUserVO);
+        });
+        return list;
     }
 
     /**

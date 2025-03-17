@@ -65,4 +65,13 @@
             #{id}
         </foreach>
     </select>
+    <!--查询互关用户id-->
+    <select id="queryEach" parameterType="Long" resultType="Long">
+        select f1.followee_id
+        from friend f1
+                 join friend f2 on f1.follower_id = f2.followee_id and f1.followee_id = f2.follower_id
+        where f1.is_delete = 0
+          and f2.is_delete = 0
+          and f1.follower_id = #{userId}
+    </select>
 </mapper>
