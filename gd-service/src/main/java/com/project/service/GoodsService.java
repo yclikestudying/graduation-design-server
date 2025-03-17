@@ -28,4 +28,9 @@ public interface GoodsService extends IService<Goods> {
      * 关键字模糊查询商品
      */
     List<QueryGoodsVO> queryGoodsByKeyword(String keyword);
+
+    /**
+     * 根据id删除商品
+     */
+    boolean deleteGoods(Long goodsId);
 }

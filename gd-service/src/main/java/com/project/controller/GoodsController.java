@@ -62,4 +62,14 @@ public class GoodsController {
         List<QueryGoodsVO> list = goodsService.queryGoodsByKeyword(keyword);
         return BaseResponse.success(list);
     }
+
+    /**
+     * 根据id删除商品
+     */
+    @DeleteMapping("/deleteGoods")
+    @ApiOperation(value = "根据id删除商品")
+    public BaseResponse<String> deleteGoods(@RequestParam("goodsId") Long goodsId) {
+        boolean result = goodsService.deleteGoods(goodsId);
+        return result ? BaseResponse.success() : BaseResponse.fail();
+    }
 }

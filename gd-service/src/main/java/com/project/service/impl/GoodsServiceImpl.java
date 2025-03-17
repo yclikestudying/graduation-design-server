@@ -108,6 +108,31 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods>
     }
 
     /**
+     * 根据id删除商品
+     */
+    @Override
+    public boolean deleteGoods(Long goodsId) {
+        // 校验参数
+        if (goodsId <= 0) {
+            log.error("根据id删除商品----->参数错误");
+            throw new BusinessExceptionHandler(400, "参数错误");
+        }
+        // 删除数据库动态记录
+        int result;
+        try {
+            result = goodsMapper.deleteById(goodsId);
+        } catch (Exception e) {
+            log.error("根据id删除商品----->数据库删除失败");
+            throw new RuntimeException(e);
+        }
+        if (result == 0) {
+            log.error("根据id删除商品 -----> 商品不存在");
+            throw new BusinessExceptionHandler(400, "商品不存在");
+        }
+        return result > 0;
+    }
+
+    /**
      * 校验是根据自己的id还是其他人的id进行操作
      */
     private Long checkUserId(Long userId) {
