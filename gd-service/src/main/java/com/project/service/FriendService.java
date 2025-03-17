@@ -13,4 +13,10 @@ public interface FriendService extends IService<Friend> {
      * 取消关注
      */
     boolean cancel(Long followerId, Long followeeId);
+
+    /**
+     * 查询用户是否被关注
+     * @param userId 用户id
+     */
+    boolean queryFriend(Long userId);
 }

@@ -6,6 +6,7 @@ import com.project.domain.Friend;
 import com.project.exception.BusinessExceptionHandler;
 import com.project.mapper.FriendMapper;
 import com.project.service.FriendService;
+import com.project.utils.UserContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -64,5 +65,25 @@ public class FriendServiceImpl extends ServiceImpl<FriendMapper, Friend>
             log.error("取消关注----->数据库报错");
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * 查询用户是否被关注
+     *
+     * @param currentUserId 用户id
+     */
+    @Override
+    public boolean queryFriend(Long currentUserId) {
+        // 获取我自己的id
+        Long userId = UserContext.getUserId();
+        // 校验传递的id
+        if (currentUserId <= 0) {
+            log.error("查询用户是否被关注 -----> id错误");
+            throw new BusinessExceptionHandler(400, "参数错误");
+        }
+        // 查询数据库记录
+        return friendMapper.selectOne(new QueryWrapper<Friend>()
+                .eq("follower_id", userId)
+                .eq("followee_id", currentUserId)) != null;
     }
 }

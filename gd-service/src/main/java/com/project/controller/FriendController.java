@@ -39,4 +39,15 @@ public class FriendController {
         boolean result = friendService.cancel(cancelRequest.getFollowerId(), cancelRequest.getFolloweeId());
         return result ? BaseResponse.success() : BaseResponse.fail();
     }
+
+    /**
+     * 查询用户是否被关注
+     * @param userId 用户id
+     */
+    @GetMapping("/queryFriend")
+    @ApiOperation(value = "查询用户是否被关注")
+    public BaseResponse<Boolean> queryFriend(@RequestParam("userId") Long userId) {
+        boolean result = friendService.queryFriend(userId);
+        return BaseResponse.success(result);
+    }
 }
