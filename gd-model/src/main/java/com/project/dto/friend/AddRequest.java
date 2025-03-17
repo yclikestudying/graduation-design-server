@@ -11,22 +11,13 @@ import java.io.Serializable;
 @GroupSequence({
         AddRequest.class, // 默认组
         ValidationGroup.Group1.class,
-        ValidationGroup.Group2.class,
-        ValidationGroup.Group3.class,
-        ValidationGroup.Group4.class
+        ValidationGroup.Group2.class
 })
 public class AddRequest implements Serializable {
     /**
-     * 关注者id
+     * 被关注者id
      */
     @NotNull(message = "id不能为空", groups = ValidationGroup.Group1.class)
     @Min(value = 1, message = "参数错误", groups = ValidationGroup.Group2.class)
-    private Long followerId;
-
-    /**
-     * 被关注者id
-     */
-    @NotNull(message = "id不能为空", groups = ValidationGroup.Group3.class)
-    @Min(value = 1, message = "参数错误", groups = ValidationGroup.Group4.class)
     private Long followeeId;
 }

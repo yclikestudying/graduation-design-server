@@ -86,4 +86,17 @@ public class FriendServiceImpl extends ServiceImpl<FriendMapper, Friend>
                 .eq("follower_id", userId)
                 .eq("followee_id", currentUserId)) != null;
     }
+
+    /**
+     * 查询我的关注数量
+     */
+    @Override
+    public Integer friendCount(Long userId) {
+        try {
+            return friendMapper.selectCount(new QueryWrapper<Friend>().eq("follower_id", userId));
+        } catch (Exception e) {
+            log.error("查询我的关注数量 -----> 数据库查询失败");
+            throw new RuntimeException(e);
+        }
+    }
 }

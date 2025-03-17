@@ -4,6 +4,7 @@ import com.project.common.BaseResponse;
 import com.project.dto.friend.AddRequest;
 import com.project.dto.friend.CancelRequest;
 import com.project.service.FriendService;
+import com.project.utils.UserContext;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.validation.annotation.Validated;
@@ -25,7 +26,7 @@ public class FriendController {
     @PostMapping("/add")
     @ApiOperation(value = "添加关注")
     public BaseResponse<String> add(@Validated @RequestBody AddRequest addRequest) {
-        boolean result = friendService.add(addRequest.getFollowerId(), addRequest.getFolloweeId());
+        boolean result = friendService.add(UserContext.getUserId(), addRequest.getFolloweeId());
         return result ? BaseResponse.success() : BaseResponse.fail();
     }
 
@@ -36,7 +37,7 @@ public class FriendController {
     @PostMapping("/cancel")
     @ApiOperation(value = "取消关注")
     public BaseResponse<String> cancel(@Validated @RequestBody CancelRequest cancelRequest) {
-        boolean result = friendService.cancel(cancelRequest.getFollowerId(), cancelRequest.getFolloweeId());
+        boolean result = friendService.cancel(UserContext.getUserId(), cancelRequest.getFolloweeId());
         return result ? BaseResponse.success() : BaseResponse.fail();
     }
 
@@ -49,5 +50,15 @@ public class FriendController {
     public BaseResponse<Boolean> queryFriend(@RequestParam("userId") Long userId) {
         boolean result = friendService.queryFriend(userId);
         return BaseResponse.success(result);
+    }
+
+    /**
+     * 查询我的关注数量
+     */
+    @GetMapping("/friendCount")
+    @ApiOperation(value = "查询我的关注数量")
+    public BaseResponse<Integer> friendCount() {
+        Integer count = friendService.friendCount(UserContext.getUserId());
+        return BaseResponse.success(count);
     }
 }

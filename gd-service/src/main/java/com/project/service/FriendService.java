@@ -19,4 +19,9 @@ public interface FriendService extends IService<Friend> {
      * @param userId 用户id
      */
     boolean queryFriend(Long userId);
+
+    /**
+     * 查询我的关注数量
+     */
+    Integer friendCount(Long userId);
 }
