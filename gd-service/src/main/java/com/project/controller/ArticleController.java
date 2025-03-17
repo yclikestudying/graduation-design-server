@@ -114,6 +114,16 @@ public class ArticleController {
     }
 
     /**
+     * 查询关注动态
+     */
+    @GetMapping("/queryArticleOfAttention")
+    @ApiOperation(value = "查询关注动态")
+    public BaseResponse<List<QueryArticleVO>> queryArticleOfAttention() {
+        List<QueryArticleVO> list = articleService.queryArticleOfAttention();
+        return BaseResponse.success(list);
+    }
+
+    /**
      * 查询我的动态数量
      */
     @GetMapping("/articleCount")

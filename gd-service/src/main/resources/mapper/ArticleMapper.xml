@@ -50,4 +50,29 @@
           and a.user_id != #{userId}
         order by a.create_time desc
     </select>
+    <!--查询关注用户id-->
+    <select id="queryFriendIds" parameterType="Long" resultType="Long">
+        select followee_id
+        from friend
+        where is_delete = 0
+          and follower_id = #{userId}
+    </select>
+    <!--指定关注用户动态信息-->
+    <select id="queryArticleOfAttention" parameterType="Long" resultType="com.project.vo.article.QueryArticleVO">
+        select u.user_name,
+               u.user_avatar,
+               a.id,
+               a.user_id,
+               a.article_content,
+               a.article_photos,
+               a.create_time
+        from user u
+                 join article a on u.id = a.user_id
+        where u.is_delete = 0
+          and a.is_delete = 0
+          and a.user_id in
+        <foreach collection="idList" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
 </mapper>

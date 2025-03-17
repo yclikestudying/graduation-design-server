@@ -40,4 +40,10 @@ public interface ArticleService extends IService<Article> {
      * 查询我的动态数量
      */
     Integer articleCount();
+
+    /**
+     * 查询关注动态
+     */
+    List<QueryArticleVO> queryArticleOfAttention();
+
 }

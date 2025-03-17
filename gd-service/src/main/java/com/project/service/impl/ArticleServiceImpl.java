@@ -91,7 +91,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
     @Override
     public List<QueryArticleVO> queryArticle(Long userId) {
         // 校验参数
-        userId = userId == null ? UserContext.getUserId() : userId;
+        userId = checkUserId(userId);
         // todo 查询 Redis 记录
         // 查询数据库
         try {
@@ -172,5 +172,39 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
             log.error("查询我的动态数量----->数据库查询失败");
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * 查询关注动态
+     */
+    @Override
+    public List<QueryArticleVO> queryArticleOfAttention() {
+        // 获取我的id
+        Long userId = UserContext.getUserId();
+        // 查询关注用户id
+        List<Long> idList = null;
+        try {
+            idList = articleMapper.queryFriendIds(userId);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        if (idList.isEmpty()) {
+            log.error("查询关注动态 -----> 没有关注动态");
+            throw new BusinessExceptionHandler(400, "暂无关注动态");
+        }
+        // 根据id查询关注用户动态
+        try {
+            return articleMapper.queryArticleOfAttention(idList);
+        } catch (Exception e) {
+            log.error("查询关注动态 -----> 数据库查询失败");
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * 校验是根据自己的id还是其他人的id进行操作
+     */
+    private Long checkUserId(Long userId) {
+        return userId == null ? UserContext.getUserId() : userId;
     }
 }
