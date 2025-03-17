@@ -11,10 +11,15 @@ public interface GoodsService extends IService<Goods> {
     /**
      * 上传商品
      */
-    boolean upload(MultipartFile file, String text, String oldPrice, String price);
+    boolean upload(MultipartFile file, String title, String text, String oldPrice, String price);
 
     /**
      * 查询个人商品
      */
     List<QueryGoodsVO> queryGoods(Long userId);
+
+    /**
+     * 查询全部商品
+     */
+    List<QueryGoodsVO> queryAllGoods();
 }

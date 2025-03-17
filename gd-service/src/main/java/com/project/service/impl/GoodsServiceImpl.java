@@ -28,11 +28,11 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods>
      * 上传商品
      */
     @Override
-    public boolean upload(MultipartFile file, String text, String oldPrice, String price) {
+    public boolean upload(MultipartFile file, String title, String text, String oldPrice, String price) {
         // 获取自己id
         Long userId = UserContext.getUserId();
         // 校验参数
-        if (StringUtils.isAnyBlank(text, oldPrice, price)) {
+        if (StringUtils.isAnyBlank(title, text, oldPrice, price)) {
             log.error("上传商品 -----> 参数错误");
             throw new BusinessExceptionHandler(400, "参数错误");
         }
@@ -45,6 +45,7 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods>
         }
         Goods goods = new Goods();
         goods.setUserId(userId);
+        goods.setGoodsTitle(title);
         goods.setGoodsContent(text);
         goods.setGoodsPhotos(link);
         goods.setGoodsOldPrice(Integer.valueOf(oldPrice));
@@ -67,6 +68,19 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods>
         // 查询数据库记录
         try {
             return goodsMapper.queryGoods(userId);
+        } catch (Exception e) {
+            log.error("查询个人商品 -----> 数据库查询失败");
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * 查询全部商品
+     */
+    @Override
+    public List<QueryGoodsVO> queryAllGoods() {
+        try {
+            return goodsMapper.queryGoods(null);
         } catch (Exception e) {
             log.error("查询个人商品 -----> 数据库查询失败");
             throw new RuntimeException(e);

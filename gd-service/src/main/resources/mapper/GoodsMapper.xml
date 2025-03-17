@@ -5,20 +5,24 @@
 <mapper namespace="com.project.mapper.GoodsMapper">
     <!--查询个人商品-->
     <select id="queryGoods" parameterType="Long" resultType="com.project.vo.goods.QueryGoodsVO">
-        select u.id,
-               u.user_name,
-               u.user_avatar,
-               g.id,
-               g.goods_content,
-               g.goods_photos,
-               g.goods_old_price,
-               g.goods_price,
-               g.create_time
-        from goods g
-                 join user u on g.user_id = u.id
-        where g.is_delete = 0
-          and u.is_delete = 0
-          and g.user_id = #{userId}
-        order by g.create_time desc
+        SELECT
+        u.user_name,
+        u.user_avatar,
+        g.id,
+        g.user_id,
+        g.goods_title,
+        g.goods_content,
+        g.goods_photos,
+        g.goods_old_price,
+        g.goods_price,
+        g.create_time
+        FROM goods g
+        JOIN user u ON g.user_id = u.id
+        WHERE g.is_delete = 0
+        AND u.is_delete = 0
+        <if test="userId != null">
+            AND g.user_id = #{userId}
+        </if>
+        ORDER BY g.create_time DESC
     </select>
 </mapper>

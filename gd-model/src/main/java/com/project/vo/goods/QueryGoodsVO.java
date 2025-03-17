@@ -29,6 +29,11 @@ public class QueryGoodsVO implements Serializable {
     private String userAvatar;
 
     /**
+     * 商品名称
+     */
+    private String goodsTitle;
+
+    /**
      * 商品内容
      */
     private String goodsContent;

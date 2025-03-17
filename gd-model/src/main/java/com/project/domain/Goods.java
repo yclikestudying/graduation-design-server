@@ -27,6 +27,11 @@ public class Goods implements Serializable {
     private Long userId;
 
     /**
+     * 商品名称
+     */
+    private String goodsTitle;
+
+    /**
      * 商品内容
      */
     private String goodsContent;

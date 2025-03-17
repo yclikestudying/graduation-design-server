@@ -24,10 +24,11 @@ public class GoodsController {
     @PostMapping("/upload")
     @ApiOperation(value = "上传商品")
     public BaseResponse<String> upload(@RequestParam("file") MultipartFile file,
+                                       @RequestParam("title") String title,
                                        @RequestParam("text") String text,
                                        @RequestParam("oldPrice") String oldPrice,
                                        @RequestParam("price") String price) {
-        boolean result = goodsService.upload(file, text, oldPrice, price);
+        boolean result = goodsService.upload(file, title, text, oldPrice, price);
         return result ? BaseResponse.success() : BaseResponse.fail();
     }
 
@@ -38,6 +39,16 @@ public class GoodsController {
     @ApiOperation(value = "查询个人商品")
     public BaseResponse<List<QueryGoodsVO>> queryGoods(@RequestParam(value = "userId", required = false) Long userId) {
         List<QueryGoodsVO> list = goodsService.queryGoods(userId);
+        return BaseResponse.success(list);
+    }
+
+    /**
+     * 查询全部商品
+     */
+    @GetMapping("/queryAllGoods")
+    @ApiOperation(value = "查询全部商品")
+    public BaseResponse<List<QueryGoodsVO>> queryAllGoods() {
+        List<QueryGoodsVO> list = goodsService.queryAllGoods();
         return BaseResponse.success(list);
     }
 }
