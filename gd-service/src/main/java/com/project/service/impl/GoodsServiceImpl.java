@@ -7,6 +7,7 @@ import com.project.mapper.GoodsMapper;
 import com.project.service.GoodsService;
 import com.project.utils.Upload;
 import com.project.utils.UserContext;
+import com.project.vo.goods.QueryGoodsVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -53,5 +55,28 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods>
             log.error("上传商品 -----> 插入数据库错误");
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * 查询个人商品
+     */
+    @Override
+    public List<QueryGoodsVO> queryGoods(Long userId) {
+        // 校验id
+        userId = checkUserId(userId);
+        // 查询数据库记录
+        try {
+            return goodsMapper.queryGoods(userId);
+        } catch (Exception e) {
+            log.error("查询个人商品 -----> 数据库查询失败");
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * 校验是根据自己的id还是其他人的id进行操作
+     */
+    private Long checkUserId(Long userId) {
+        return userId == null ? UserContext.getUserId() : userId;
     }
 }

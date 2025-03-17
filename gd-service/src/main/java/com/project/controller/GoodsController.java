@@ -2,15 +2,14 @@ package com.project.controller;
 
 import com.project.common.BaseResponse;
 import com.project.service.GoodsService;
+import com.project.vo.goods.QueryGoodsVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @RestController
 @RequestMapping("/goods")
@@ -30,5 +29,15 @@ public class GoodsController {
                                        @RequestParam("price") String price) {
         boolean result = goodsService.upload(file, text, oldPrice, price);
         return result ? BaseResponse.success() : BaseResponse.fail();
+    }
+
+    /**
+     * 查询个人商品
+     */
+    @GetMapping("/queryGoods")
+    @ApiOperation(value = "查询个人商品")
+    public BaseResponse<List<QueryGoodsVO>> queryGoods(@RequestParam(value = "userId", required = false) Long userId) {
+        List<QueryGoodsVO> list = goodsService.queryGoods(userId);
+        return BaseResponse.success(list);
     }
 }
