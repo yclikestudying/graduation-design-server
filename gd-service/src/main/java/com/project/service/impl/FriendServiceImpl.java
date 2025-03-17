@@ -99,4 +99,17 @@ public class FriendServiceImpl extends ServiceImpl<FriendMapper, Friend>
             throw new RuntimeException(e);
         }
     }
+
+    /**
+     * 查询我的粉丝数量
+     */
+    @Override
+    public Integer fansCount(Long userId) {
+        try {
+            return friendMapper.selectCount(new QueryWrapper<Friend>().eq("followee_id", userId));
+        } catch (Exception e) {
+            log.error("查询我的粉丝数量 -----> 数据库查询失败");
+            throw new RuntimeException(e);
+        }
+    }
 }

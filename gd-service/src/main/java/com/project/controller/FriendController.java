@@ -61,4 +61,14 @@ public class FriendController {
         Integer count = friendService.friendCount(UserContext.getUserId());
         return BaseResponse.success(count);
     }
+
+    /**
+     * 查询我的粉丝数量
+     */
+    @GetMapping("/fansCount")
+    @ApiOperation(value = "查询我的关注数量")
+    public BaseResponse<Integer> fansCount() {
+        Integer count = friendService.fansCount(UserContext.getUserId());
+        return BaseResponse.success(count);
+    }
 }
