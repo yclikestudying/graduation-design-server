@@ -79,3 +79,17 @@ create table if not exists express
     is_show         tinyint  default 1                 not null comment '1-同意，0-拒绝',
     is_delete       tinyint  default 0                 null comment '0-存在 1-已删除'
 );
+
+create table if not exists lost
+(
+    id               bigint auto_increment comment '主键'
+        primary key,
+    user_id          bigint                             not null comment '发布用户id',
+    lost_type        varchar(20)                        not null comment '丢失物品类型（失物招领、寻物启事）',
+    lost_name        varchar(64)                        not null comment '丢失物品名称',
+    lost_description varchar(256)                       not null comment '丢失物品描述',
+    lost_photo       varchar(1024)                      not null comment '丢失物品图片',
+    create_time      datetime default CURRENT_TIMESTAMP null comment '发布时间',
+    is_show          tinyint  default 1                 not null comment '1-同意，0-拒绝',
+    is_delete        tinyint  default 0                 not null comment '0-存在 1-已删除'
+);
