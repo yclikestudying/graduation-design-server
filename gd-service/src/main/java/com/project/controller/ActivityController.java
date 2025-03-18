@@ -3,6 +3,7 @@ package com.project.controller;
 import com.project.common.BaseResponse;
 import com.project.service.ActivityService;
 import com.project.vo.activity.QueryActivityVO;
+import com.project.vo.activity.QueryOneActivityVO;
 import com.project.vo.lost.QueryLostVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -70,5 +71,15 @@ public class ActivityController {
     public BaseResponse<String> deleteActivity(@RequestParam("activityId") Long activityId) {
         boolean result = activityService.deleteActivity(activityId);
         return result ? BaseResponse.success() : BaseResponse.fail();
+    }
+
+    /**
+     * 根据活动id查询活动
+     */
+    @GetMapping("/queryActivityById")
+    @ApiOperation(value = "根据活动id查询活动")
+    public BaseResponse<QueryOneActivityVO> queryActivityById(@RequestParam("activityId") Long activityId) {
+        QueryOneActivityVO list = activityService.queryActivityById(activityId);
+        return BaseResponse.success(list);
     }
 }

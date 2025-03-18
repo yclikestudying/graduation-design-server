@@ -3,6 +3,7 @@ package com.project.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.project.domain.Activity;
 import com.project.vo.activity.QueryActivityVO;
+import com.project.vo.activity.QueryOneActivityVO;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -36,4 +37,9 @@ public interface ActivityService extends IService<Activity> {
      * 根据id删除活动
      */
     boolean deleteActivity(Long activityId);
+
+    /**
+     * 根据活动id查询活动
+     */
+    QueryOneActivityVO queryActivityById(Long activityId);
 }

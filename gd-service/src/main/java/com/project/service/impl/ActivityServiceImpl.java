@@ -11,6 +11,7 @@ import com.project.service.ActivityService;
 import com.project.utils.Upload;
 import com.project.utils.UserContext;
 import com.project.vo.activity.QueryActivityVO;
+import com.project.vo.activity.QueryOneActivityVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -78,9 +79,9 @@ public class ActivityServiceImpl extends ServiceImpl<ActivityMapper, Activity>
      */
     @Override
     public Integer activityMaxPeople(Long activityId) {
-        return activityMapper.selectCount(new QueryWrapper<Activity>()
-                .select("user_id")
-                .eq("id", activityId));
+        return activityMapper.selectOne(new QueryWrapper<Activity>()
+                .select("activity_max_people")
+                .eq("id", activityId)).getActivityMaxPeople();
     }
 
     /**
@@ -135,6 +136,24 @@ public class ActivityServiceImpl extends ServiceImpl<ActivityMapper, Activity>
             throw new BusinessExceptionHandler(400, "不存在");
         }
         return result > 0;
+    }
+
+    /**
+     * 根据活动id查询活动
+     */
+    @Override
+    public QueryOneActivityVO queryActivityById(Long activityId) {
+        // 校验参数
+        if (activityId <= 0) {
+            log.error("根据活动id查询活动 -----> 参数错误");
+            throw new BusinessExceptionHandler(400, "参数错误");
+        }
+        // 联表查询活动以及发布者信息
+        QueryOneActivityVO queryOneActivityVO = activityMapper.queryActivityById(activityId);
+        // 根据活动id查询活动当前人数
+        Integer count = activityRelationService.queryCount(queryOneActivityVO.getId());
+        queryOneActivityVO.setCurrentPeople(count);
+        return queryOneActivityVO;
     }
 
     /**
