@@ -82,4 +82,14 @@ public class ActivityController {
         QueryOneActivityVO list = activityService.queryActivityById(activityId);
         return BaseResponse.success(list);
     }
+
+    /**
+     * 查询活动数量
+     */
+    @GetMapping("/queryCount")
+    @ApiOperation(value = "查询活动数量")
+    public BaseResponse<Integer> queryCount() {
+        Integer count = activityService.queryCount();
+        return BaseResponse.success(count);
+    }
 }

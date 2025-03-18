@@ -42,4 +42,9 @@ public interface ActivityService extends IService<Activity> {
      * 根据活动id查询活动
      */
     QueryOneActivityVO queryActivityById(Long activityId);
+
+    /**
+     * 查询活动数量
+     */
+    Integer queryCount();
 }

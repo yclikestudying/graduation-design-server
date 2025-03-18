@@ -157,6 +157,17 @@ public class ActivityServiceImpl extends ServiceImpl<ActivityMapper, Activity>
     }
 
     /**
+     * 查询活动数量
+     */
+    @Override
+    public Integer queryCount() {
+        // 获取我的id
+        Long userId = UserContext.getUserId();
+        // 查询活动数量
+        return activityMapper.selectCount(new QueryWrapper<Activity>().eq("user_id", userId));
+    }
+
+    /**
      * 用户查询
      * 全部查询
      * 模糊查询
