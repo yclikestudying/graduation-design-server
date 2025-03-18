@@ -26,7 +26,7 @@ public class ActivityController {
     @ApiOperation(value = "创建活动")
     public BaseResponse<String> upload(@RequestParam("file") MultipartFile file,
                                        @RequestParam("title") String title,
-                                       @RequestParam("description") String description,
+                                       @RequestParam("text") String description,
                                        @RequestParam("max") Integer max){
         boolean result = activityService.uplaod(file, title, description, max);
         return result ? BaseResponse.success() : BaseResponse.fail();
