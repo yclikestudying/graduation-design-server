@@ -10,14 +10,19 @@ import com.project.service.ActivityRelationService;
 import com.project.service.ActivityService;
 import com.project.utils.Upload;
 import com.project.utils.UserContext;
+import com.project.vo.activity.QueryActivityVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -76,5 +81,73 @@ public class ActivityServiceImpl extends ServiceImpl<ActivityMapper, Activity>
         return activityMapper.selectCount(new QueryWrapper<Activity>()
                 .select("user_id")
                 .eq("id", activityId));
+    }
+
+    /**
+     * 查询用户创建的活动
+     */
+    @Override
+    public List<QueryActivityVO> queryActivity(Long userId) {
+        // 校验参数
+        userId = userId == null ? UserContext.getUserId() : userId;
+        // 查询用户创建的活动列表
+        return queryActivity(userId, null);
+    }
+
+    /**
+     * 查询所有活动
+     */
+    @Override
+    public List<QueryActivityVO> queryAllActivity() {
+        // 查询活动列表
+        return queryActivity(null, null);
+    }
+
+    /**
+     * 关键字模糊查询活动
+     */
+    @Override
+    public List<QueryActivityVO> queryActivityByKeyword(String keyword) {
+        // 查询活动列表
+        return queryActivity(null, keyword);
+    }
+
+    /**
+     * 根据id删除活动
+     */
+    @Override
+    public boolean deleteActivity(Long activityId) {
+        // 校验参数
+        if (activityId <= 0) {
+            log.error("根据id删除活动----->参数错误");
+            throw new BusinessExceptionHandler(400, "参数错误");
+        }
+        // 删除数据库动态记录
+        int result;
+        try {
+            result = activityMapper.deleteById(activityId);
+        } catch (Exception e) {
+            log.error("根据id删除活动----->数据库删除失败");
+            throw new RuntimeException(e);
+        }
+        if (result == 0) {
+            log.error("根据id删除活动 -----> 不存在");
+            throw new BusinessExceptionHandler(400, "不存在");
+        }
+        return result > 0;
+    }
+
+    /**
+     * 用户查询
+     * 全部查询
+     * 模糊查询
+     */
+    private List<QueryActivityVO> queryActivity(Long userId, String keyword) {
+        List<QueryActivityVO> queryActivityVOS = activityMapper.queryActivity(userId, keyword);
+        // 根据每个活动查询活动的当前人数
+        return queryActivityVOS.stream().peek(queryActivityVO -> {
+            Integer count = activityRelationService.queryCount(queryActivityVO.getId());
+            queryActivityVO.setCurrentPeople(count);
+        }).collect(Collectors.toList());
     }
 }

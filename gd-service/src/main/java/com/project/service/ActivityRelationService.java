@@ -9,4 +9,8 @@ public interface ActivityRelationService extends IService<ActivityRelation> {
      * 加入活动
      */
     boolean addActivity(Long activityId);
+    /**
+     * 查询当前活动人数
+     */
+    Integer queryCount(Long activityId);
 }

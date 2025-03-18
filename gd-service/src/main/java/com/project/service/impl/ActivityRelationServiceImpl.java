@@ -47,9 +47,7 @@ public class ActivityRelationServiceImpl extends ServiceImpl<ActivityRelationMap
             // 查询活动最大人数
             Integer maxPeople = activityService.activityMaxPeople(activityId);
             // 查询活动已有人数
-            Integer currentPeople = activityRelationMapper.selectCount(new QueryWrapper<ActivityRelation>()
-                    .select("user_id")
-                    .eq("activity_id", activityId));
+            Integer currentPeople = queryCount(activityId);
             if (currentPeople >= maxPeople) {
                 log.error("加入活动 -----> 人数已满");
                 throw new BusinessExceptionHandler(400, "人数已满");
@@ -64,6 +62,18 @@ public class ActivityRelationServiceImpl extends ServiceImpl<ActivityRelationMap
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    /**
+     * 查询当前活动人数
+     *
+     * @return
+     */
+    @Override
+    public Integer queryCount(Long activityId) {
+        return activityRelationMapper.selectCount(new QueryWrapper<ActivityRelation>()
+                .select("user_id")
+                .eq("activity_id", activityId));
     }
 
     /**
