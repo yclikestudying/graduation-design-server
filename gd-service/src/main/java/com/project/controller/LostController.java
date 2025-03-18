@@ -72,4 +72,14 @@ public class LostController {
         List<QueryLostVO> list = lostService.queryLostByKeyword(keyword);
         return BaseResponse.success(list);
     }
+
+    /**
+     * 根据id删除寻物启事
+     */
+    @DeleteMapping("/deleteLost")
+    @ApiOperation(value = "根据id删除寻物启事")
+    public BaseResponse<String> deleteLost(@RequestParam("lostId") Long lostId) {
+        boolean result = lostService.deleteLost(lostId);
+        return result ? BaseResponse.success() : BaseResponse.fail();
+    }
 }

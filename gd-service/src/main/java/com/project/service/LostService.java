@@ -33,4 +33,9 @@ public interface LostService extends IService<Lost> {
      * 关键字模糊查询寻物启事
      */
     List<QueryLostVO> queryLostByKeyword(String keyword);
+
+    /**
+     * 根据id删除寻物启事
+     */
+    boolean deleteLost(Long lostId);
 }

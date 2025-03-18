@@ -139,6 +139,31 @@ public class LostServiceImpl extends ServiceImpl<LostMapper, Lost>
     }
 
     /**
+     * 根据id删除寻物启事
+     */
+    @Override
+    public boolean deleteLost(Long lostId) {
+        // 校验参数
+        if (lostId <= 0) {
+            log.error("根据id删除寻物启事----->参数错误");
+            throw new BusinessExceptionHandler(400, "参数错误");
+        }
+        // 删除数据库动态记录
+        int result;
+        try {
+            result = lostMapper.deleteById(lostId);
+        } catch (Exception e) {
+            log.error("根据id删除寻物启事----->数据库删除失败");
+            throw new RuntimeException(e);
+        }
+        if (result == 0) {
+            log.error("根据id删除寻物启事 -----> 不存在");
+            throw new BusinessExceptionHandler(400, "不存在");
+        }
+        return result > 0;
+    }
+
+    /**
      * 校验是根据自己的id还是其他人的id进行操作
      */
     private Long checkUserId(Long userId) {
