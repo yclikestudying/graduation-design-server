@@ -3,5 +3,25 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.project.mapper.LostMapper">
-
+    <select id="queryLost" resultType="com.project.vo.lost.QueryLostVO">
+        select id,
+        user_id,
+        lost_type,
+        lost_name,
+        lost_photo,
+        lost_description,
+        create_time
+        from lost
+        where is_delete = 0
+        <if test="userId != null">
+            and user_id = #{userId}
+        </if>
+        <if test="keyword != null">
+            and
+            (lost_type like concat('%', #{keyword}, '%')
+            or lost_name like concat('%', #{keyword}, '%')
+            or lost_description like concat('%', #{keyword}, '%'))
+        </if>
+        order by create_time desc
+    </select>
 </mapper>
