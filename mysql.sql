@@ -69,6 +69,7 @@ create table if not exists goods
     is_delete       tinyint  default 0                 not null comment '0-存在 1-已删除'
 );
 
+# 跑腿服务表
 create table if not exists express
 (
     id              bigint auto_increment comment '主键'
@@ -80,6 +81,7 @@ create table if not exists express
     is_delete       tinyint  default 0                 null comment '0-存在 1-已删除'
 );
 
+# 寻物启事表
 create table if not exists lost
 (
     id               bigint auto_increment comment '主键'
@@ -93,3 +95,24 @@ create table if not exists lost
     is_show          tinyint  default 1                 not null comment '1-同意，0-拒绝',
     is_delete        tinyint  default 0                 not null comment '0-存在 1-已删除'
 );
+
+CREATE TABLE IF NOT EXISTS activity
+(
+    id                   BIGINT AUTO_INCREMENT COMMENT '主键' PRIMARY KEY,
+    user_id              BIGINT                             NOT NULL COMMENT '发布用户id',
+    activity_name        VARCHAR(128)                       NOT NULL COMMENT '活动名称',
+    activity_description VARCHAR(1024)                      NOT NULL COMMENT '活动描述',
+    create_time          DATETIME DEFAULT CURRENT_TIMESTAMP NULL COMMENT '发布时间',
+    is_show              TINYINT  DEFAULT 1                 NOT NULL COMMENT '1-显示，0-隐藏',
+    is_delete            TINYINT  DEFAULT 0                 NOT NULL COMMENT '0-存在，1-已删除'
+) COMMENT '活动表';
+
+CREATE TABLE IF NOT EXISTS activity_relation
+(
+    id          BIGINT AUTO_INCREMENT COMMENT '主键' PRIMARY KEY,
+    activity_id BIGINT NOT NULL COMMENT '活动id',
+    user_id     BIGINT NOT NULL COMMENT '用户id',
+    join_time   DATETIME DEFAULT CURRENT_TIMESTAMP NULL COMMENT '加入时间',
+    is_delete   TINYINT  DEFAULT 0 NOT NULL COMMENT '0-存在，1-已删除',
+    UNIQUE KEY uk_activity_user (activity_id, user_id) COMMENT '唯一索引，防止重复加入'
+) COMMENT '活动关系表';

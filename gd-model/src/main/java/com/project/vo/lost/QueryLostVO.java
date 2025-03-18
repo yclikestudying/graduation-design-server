@@ -18,6 +18,16 @@ public class QueryLostVO {
     private Long userId;
 
     /**
+     * 发布用户名称
+     */
+    private String userName;
+
+    /**
+     * 发布用户头像
+     */
+    private String userAvatar;
+
+    /**
      * 丢失物品类型（失物招领、寻物启事）
      */
     private String lostType;
