@@ -16,5 +16,5 @@ public interface MessageMapper extends BaseMapper<Message> {
     /**
      * 查询最新的一条消息
      */
-    List<QueryNoReadMessageVO> queryNoReadMessage(@Param("userId") Long userId);
+    QueryNoReadMessageVO queryNoReadMessage(@Param("id") Long id, @Param("userId") Long userId);
 }

@@ -19,6 +19,11 @@ public class QueryNoReadMessageVO implements Serializable {
     private Long sendUserId;
 
     /**
+     * 接收者id
+     */
+    private Long acceptUserId;
+
+    /**
      * 发送者头像
      */
     private String userAvatar;

@@ -17,9 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -109,33 +107,52 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message>
     }
 
     /**
-     * 查询未读消息列表和消息总数
+     * 查询最新消息列表
      */
     @Override
-    public Map<String, Object> queryNoReadListAndTotal() {
+    public List<QueryNoReadMessageVO> queryNoReadList() {
         // 获取自己的id
         Long userId = UserContext.getUserId();
-        // 查询最新的一条消息集合
-        List<QueryNoReadMessageVO> queryNoReadMessageVOS = messageMapper.queryNoReadMessage(userId);
-        // 根据祖新消息集合中的发送者的id和我的id查询我的未读消息数量
+        // 查询出给我发过消息的用户的id
+        List<Message> messages = messageMapper.selectList(new QueryWrapper<Message>()
+                .select("send_user_id")
+                .eq("accept_user_id", userId));
+        List<Long> idList = messages.stream().map(Message::getSendUserId).collect(Collectors.toList());
+        // 根据 idList 和 userId 查询最新的一条消息集合
+        List<QueryNoReadMessageVO> queryNoReadMessageVOS = new ArrayList<>();
+        idList.forEach(id -> {
+            // 每个与我聊过天的用户的最新一条消息
+            queryNoReadMessageVOS.add(messageMapper.queryNoReadMessage(id, userId));
+        });
+        // 根据最新消息集合中的发送者的id和我的id查询我的未读消息数量
         if (queryNoReadMessageVOS.isEmpty()) {
             return null;
         }
-        List<QueryNoReadMessageVO> list = queryNoReadMessageVOS.stream().peek(queryNoReadMessageVO -> {
-            Integer count = messageMapper.selectCount(new QueryWrapper<Message>()
-                    .eq("send_user_id", queryNoReadMessageVO.getSendUserId())
-                    .eq("accept_user_id", userId)
-                    .eq("is_read", 0));
-            queryNoReadMessageVO.setNoReadMessageCount(count);
+        return queryNoReadMessageVOS.stream().peek(queryNoReadMessageVO -> {
+            if (!Objects.equals(queryNoReadMessageVO.getSendUserId(), userId)) {
+                Integer count = messageMapper.selectCount(new QueryWrapper<Message>()
+                        .eq("send_user_id", queryNoReadMessageVO.getSendUserId())
+                        .eq("accept_user_id", userId)
+                        .eq("is_read", 0));
+                queryNoReadMessageVO.setNoReadMessageCount(count);
+            }
+        }).sorted((vo1, vo2) -> {
+            // 按时间降序排序
+            return vo2.getCreateTime().compareTo(vo1.getCreateTime());
         }).collect(Collectors.toList());
+    }
+
+    /**
+     * 查询未读消息总数
+     */
+    @Override
+    public Integer queryNoReadTotal() {
+        // 获取自己的id
+        Long userId = UserContext.getUserId();
         // 查询总的未读消息
-        Integer count = messageMapper.selectCount(new QueryWrapper<Message>()
+        return messageMapper.selectCount(new QueryWrapper<Message>()
                 .eq("accept_user_id", userId)
                 .eq("is_read", 0));
-        Map<String, Object> map = new HashMap<>();
-        map.put("messageList", list);
-        map.put("total", count);
-        return map;
     }
 }
 

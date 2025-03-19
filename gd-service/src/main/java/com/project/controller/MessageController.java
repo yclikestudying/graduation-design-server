@@ -3,6 +3,7 @@ package com.project.controller;
 import com.project.common.BaseResponse;
 import com.project.service.MessageService;
 import com.project.vo.message.QueryMessageVO;
+import com.project.vo.message.QueryNoReadMessageVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
@@ -39,12 +40,21 @@ public class MessageController {
     }
 
     /**
-     * 查询未读消息列表和消息总数
+     * 查询最新消息列表
      */
-    @GetMapping("/queryNoReadListAndTotal")
-    @ApiOperation(value = "查询未读消息列表和消息总数")
-    public BaseResponse<Map<String, Object>> queryNoReadListAndTotal() {
-        Map<String, Object> map = messageService.queryNoReadListAndTotal();
-        return BaseResponse.success(map);
+    @GetMapping("/queryNoReadList")
+    @ApiOperation(value = "查询未读消息列表")
+    public BaseResponse<List<QueryNoReadMessageVO>> queryNoReadListAndTotal() {
+        List<QueryNoReadMessageVO> list = messageService.queryNoReadList();
+        return BaseResponse.success(list);
+    }
+
+    /**
+     * 查询未读消息总数
+     */
+    @GetMapping("/queryNoReadTotal")
+    @ApiOperation(value = "查询未读消息总数")
+    public BaseResponse<Integer> queryNoReadTotal(){
+        return BaseResponse.success(messageService.queryNoReadTotal());
     }
 }
