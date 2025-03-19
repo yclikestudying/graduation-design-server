@@ -3,12 +3,14 @@ package com.project.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.project.domain.Message;
+import com.project.vo.message.QueryMessageVO;
 
-/**
-* @author Lenovo
-* @description 针对表【message(聊天消息表)】的数据库操作Service
-* @createDate 2025-03-19 08:57:12
-*/
+import java.util.List;
+
 public interface MessageService extends IService<Message> {
 
+    /**
+     * 查询聊天信息
+     */
+    List<QueryMessageVO> queryMessage(Long userId);
 }

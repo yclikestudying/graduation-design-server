@@ -4,13 +4,13 @@ import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
-import javax.websocket.OnClose;
-import javax.websocket.OnMessage;
-import javax.websocket.OnOpen;
-import javax.websocket.Session;
+
+import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 @ServerEndpoint("/wsConnect/{userId}")
@@ -18,17 +18,19 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class WebSocketServer {
     // 存放每个客户端对应的 websocket 对象
-    private static final ConcurrentHashMap<Session, Long> webSocketMap = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<Long, Session> webSocketMap = new ConcurrentHashMap<>();
     private static ApplicationContext applicationContext;
     private final Gson gson = new Gson();
 
     // 客户端与服务器建立连接
     @OnOpen
     public void onOpen(Session session, @PathParam("userId") Long userId) {
-        if (!webSocketMap.containsKey(session)) {
-            webSocketMap.put(session, userId);
+        if (!webSocketMap.containsKey(userId)) {
+            webSocketMap.put(userId, session);
+            log.info("id为 {} 的用户建立连接成功", userId);
+        } else {
+            log.warn("id为 {} 的用户正在重复连接", userId);
         }
-        log.info("用户:{} 成功建立连接", userId);
     }
 
     // 客户端发送消息
@@ -40,19 +42,25 @@ public class WebSocketServer {
     // 客户端关闭连接
     @OnClose
     public void onClose(Session session) {
-        if (webSocketMap.containsKey(session)) {
-            log.info("用户:{} 成功退出连接", webSocketMap.get(session));
-            webSocketMap.remove(session);
+        Set<Map.Entry<Long, Session>> entries = webSocketMap.entrySet();
+        for (Map.Entry<Long, Session> entry : entries) {
+            if (entry.getValue() == session) {
+                webSocketMap.remove(entry.getKey());
+                log.info("id为 {} 的用户断开连接", entry.getKey());
+            }
         }
+    }
+
+    // 客户端发生错误
+    @OnError
+    public void onError(Session session, Throwable throwable) {
+        log.error("WebSocket 发生错误:", throwable);
+        onClose(session);
     }
 
     // 一对一聊天
     public void sendMessage(Long userId, String chatContent) throws IOException {
-        for (Session session : webSocketMap.keySet()) {
-            if (webSocketMap.get(session).equals(userId)) {
-                session.getBasicRemote().sendText(chatContent);
-            }
-        }
+
     }
 
     public static void setApplicationContext(ApplicationContext context) {
