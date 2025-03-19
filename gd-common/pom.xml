@@ -73,6 +73,12 @@
             <artifactId>spring-boot-starter-aop</artifactId>
             <version>${aop.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
+
         <!--oss文件存储-->
         <dependency>
             <groupId>com.aliyun.oss</groupId>
