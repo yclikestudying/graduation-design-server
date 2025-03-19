@@ -19,4 +19,9 @@ public interface MessageService extends IService<Message> {
      * 存储私聊消息
      */
     boolean insertDirectMessage(MessageDTO messageDTO);
+
+    /**
+     * 消息已读
+     */
+    Boolean isRead(Long userId);
 }
