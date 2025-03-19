@@ -11,12 +11,16 @@ import com.project.mapper.MessageMapper;
 import com.project.service.MessageService;
 import com.project.utils.UserContext;
 import com.project.vo.message.QueryMessageVO;
+import com.project.vo.message.QueryNoReadMessageVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -102,6 +106,36 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message>
                 .eq("send_user_id", userId)
                 .eq("accept_user_id", myId)
                 .set("is_read", 1));
+    }
+
+    /**
+     * 查询未读消息列表和消息总数
+     */
+    @Override
+    public Map<String, Object> queryNoReadListAndTotal() {
+        // 获取自己的id
+        Long userId = UserContext.getUserId();
+        // 查询最新的一条消息集合
+        List<QueryNoReadMessageVO> queryNoReadMessageVOS = messageMapper.queryNoReadMessage(userId);
+        // 根据祖新消息集合中的发送者的id和我的id查询我的未读消息数量
+        if (queryNoReadMessageVOS.isEmpty()) {
+            return null;
+        }
+        List<QueryNoReadMessageVO> list = queryNoReadMessageVOS.stream().peek(queryNoReadMessageVO -> {
+            Integer count = messageMapper.selectCount(new QueryWrapper<Message>()
+                    .eq("send_user_id", queryNoReadMessageVO.getSendUserId())
+                    .eq("accept_user_id", userId)
+                    .eq("is_read", 0));
+            queryNoReadMessageVO.setNoReadMessageCount(count);
+        }).collect(Collectors.toList());
+        // 查询总的未读消息
+        Integer count = messageMapper.selectCount(new QueryWrapper<Message>()
+                .eq("accept_user_id", userId)
+                .eq("is_read", 0));
+        Map<String, Object> map = new HashMap<>();
+        map.put("messageList", list);
+        map.put("total", count);
+        return map;
     }
 }
 

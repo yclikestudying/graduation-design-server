@@ -7,6 +7,7 @@ import com.project.dto.message.MessageDTO;
 import com.project.vo.message.QueryMessageVO;
 
 import java.util.List;
+import java.util.Map;
 
 public interface MessageService extends IService<Message> {
 
@@ -24,4 +25,9 @@ public interface MessageService extends IService<Message> {
      * 消息已读
      */
     Boolean isRead(Long userId);
+
+    /**
+     * 查询未读消息列表和消息总数
+     */
+    Map<String, Object> queryNoReadListAndTotal();
 }

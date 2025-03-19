@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/message")
@@ -35,5 +36,15 @@ public class MessageController {
     @ApiOperation(value = "消息已读")
     public BaseResponse<Boolean> isRead(@RequestBody Map<String, Long> map) {
         return BaseResponse.success(messageService.isRead(map.get("userId")));
+    }
+
+    /**
+     * 查询未读消息列表和消息总数
+     */
+    @GetMapping("/queryNoReadListAndTotal")
+    @ApiOperation(value = "查询未读消息列表和消息总数")
+    public BaseResponse<Map<String, Object>> queryNoReadListAndTotal() {
+        Map<String, Object> map = messageService.queryNoReadListAndTotal();
+        return BaseResponse.success(map);
     }
 }
