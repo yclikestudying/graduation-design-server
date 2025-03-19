@@ -110,9 +110,22 @@ CREATE TABLE IF NOT EXISTS activity
 CREATE TABLE IF NOT EXISTS activity_relation
 (
     id          BIGINT AUTO_INCREMENT COMMENT '主键' PRIMARY KEY,
-    activity_id BIGINT NOT NULL COMMENT '活动id',
-    user_id     BIGINT NOT NULL COMMENT '用户id',
+    activity_id BIGINT                             NOT NULL COMMENT '活动id',
+    user_id     BIGINT                             NOT NULL COMMENT '用户id',
     join_time   DATETIME DEFAULT CURRENT_TIMESTAMP NULL COMMENT '加入时间',
-    is_delete   TINYINT  DEFAULT 0 NOT NULL COMMENT '0-存在，1-已删除',
+    is_delete   TINYINT  DEFAULT 0                 NOT NULL COMMENT '0-存在，1-已删除',
     UNIQUE KEY uk_activity_user (activity_id, user_id) COMMENT '唯一索引，防止重复加入'
 ) COMMENT '活动关系表';
+
+create table if not exists message
+(
+    id              bigint auto_increment comment '主键'
+        primary key,
+    send_user_id    bigint                             not null comment '发送者id',
+    accept_user_id  bigint                             not null comment '接收者id',
+    message_content varchar(10240)                     not null comment '消息',
+    message_type    varchar(10)                        null comment '类型（文本，图片，文件）',
+    create_time     datetime default CURRENT_TIMESTAMP null comment '创建时间',
+    is_read         int      default 0                 null comment '0-未读，1-已读',
+    is_delete       int      default 0                 null comment '0-存在，1-删除'
+) comment '聊天消息表'
