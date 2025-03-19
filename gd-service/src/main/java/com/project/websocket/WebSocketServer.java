@@ -1,6 +1,10 @@
 package com.project.websocket;
 
 import com.google.gson.Gson;
+import com.project.constant.WebSocketConstant;
+import com.project.dto.message.MessageDTO;
+import com.project.dto.ws.WebSocketDTO;
+import com.project.service.MessageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -9,6 +13,7 @@ import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -35,8 +40,14 @@ public class WebSocketServer {
 
     // 客户端发送消息
     @OnMessage
-    public void onMessage(String chatContent) throws IOException {
-
+    public void onMessage(String data) throws IOException {
+        WebSocketDTO webSocketDTO = gson.fromJson(data, WebSocketDTO.class);
+        // 获取类型
+        String type = webSocketDTO.getType();
+        if (WebSocketConstant.DIRECT_MESSAGE.equals(type)) {
+            // 接收私聊消息
+            directMessage(gson.fromJson(webSocketDTO.getData(), MessageDTO.class), type);
+        }
     }
 
     // 客户端关闭连接
@@ -58,9 +69,29 @@ public class WebSocketServer {
         onClose(session);
     }
 
-    // 一对一聊天
-    public void sendMessage(Long userId, String chatContent) throws IOException {
+    // 接收私聊消息
+    public void directMessage(MessageDTO messageDTO, String type) {
+        MessageService messageService = applicationContext.getBean(MessageService.class);
+        boolean result = messageService.insertDirectMessage(messageDTO);
+        if (result) {
+            Map<String, String> map = new HashMap<>();
+            map.put("type", type);
+            map.put("data", gson.toJson(messageDTO));
+            messageBroadcast(messageDTO.getSendUserId(), map);
+            messageBroadcast(messageDTO.getAcceptUserId(), map);
+        }
+    }
 
+    // 一对一消息广播
+    public void messageBroadcast(Long userId, Map<String, String> map) {
+        Session session = webSocketMap.get(userId);
+        try {
+            if (session != null) {
+                session.getBasicRemote().sendText(gson.toJson(map));
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static void setApplicationContext(ApplicationContext context) {

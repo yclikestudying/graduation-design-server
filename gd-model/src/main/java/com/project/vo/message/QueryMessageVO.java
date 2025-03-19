@@ -23,11 +23,6 @@ public class QueryMessageVO {
     private String userAvatar;
 
     /**
-     * 发送者名称
-     */
-    private String userName;
-
-    /**
      * 消息
      */
     private String messageContent;

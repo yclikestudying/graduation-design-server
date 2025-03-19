@@ -5,8 +5,7 @@
 <mapper namespace="com.project.mapper.MessageMapper">
     <!--查询聊天记录-->
     <select id="queryMessage" resultType="com.project.vo.message.QueryMessageVO">
-        select u.user_name,
-               u.user_avatar,
+        select u.user_avatar,
                m.id,
                m.send_user_id,
                m.message_content,
@@ -15,6 +14,6 @@
         from user u join message m on u.id = m.send_user_id
         where u.is_delete = 0
           and m.is_delete = 0
-          and m.send_user_id in (#{userId}, #{myId})
+          and ((m.send_user_id = #{myId} and m.accept_user_id = #{userId}) or (m.accept_user_id = #{myId} and m.send_user_id = #{userId}))
     </select>
 </mapper>
