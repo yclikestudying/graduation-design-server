@@ -29,7 +29,11 @@
                m.message_type,
                m.create_time
         from user u
-                 join message m on u.id = m.send_user_id
+                 join message m on u.id =
+                                   CASE
+                                       WHEN m.send_user_id = #{userId} THEN m.accept_user_id
+                                       ELSE m.send_user_id
+                                       END
         where u.is_delete = 0
           and m.is_delete = 0
           and ((m.accept_user_id = #{userId} and m.send_user_id = #{id}) or

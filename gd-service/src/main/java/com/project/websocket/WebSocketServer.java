@@ -44,9 +44,12 @@ public class WebSocketServer {
         WebSocketDTO webSocketDTO = gson.fromJson(data, WebSocketDTO.class);
         // 获取类型
         String type = webSocketDTO.getType();
-        if (WebSocketConstant.DIRECT_MESSAGE.equals(type)) {
+        if (WebSocketConstant.DIRECT_MESSAGE_TEXT.equals(type)) {
             // 接收私聊消息
-            directMessage(gson.fromJson(webSocketDTO.getData(), MessageDTO.class), type);
+            directMessageText(gson.fromJson(webSocketDTO.getData(), MessageDTO.class), type);
+        } else if (WebSocketConstant.DIRECT_MESSAGE_IMAGE.equals(type)) {
+            // 接收私聊消息图片
+
         }
     }
 
@@ -70,17 +73,23 @@ public class WebSocketServer {
     }
 
     // 接收私聊消息
-    public void directMessage(MessageDTO messageDTO, String type) {
+    public void directMessageText(MessageDTO messageDTO, String type) {
         MessageService messageService = applicationContext.getBean(MessageService.class);
         boolean result = messageService.insertDirectMessage(messageDTO);
         if (result) {
             Map<String, String> map = new HashMap<>();
             map.put("type", type);
             map.put("data", gson.toJson(messageDTO));
+            // 进行前端消息广播
             messageBroadcast(messageDTO.getSendUserId(), map);
             messageBroadcast(messageDTO.getAcceptUserId(), map);
         }
     }
+
+    // 接收私聊图片
+//    public void directMessageImage(MessageImageDTO messageImageDTO, String type) {
+//        System.out.println(messageImageDTO);
+//    }
 
     // 一对一消息广播
     public void messageBroadcast(Long userId, Map<String, String> map) {

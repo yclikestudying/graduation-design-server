@@ -18,6 +18,12 @@
     </properties>
 
     <dependencies>
+        <!--springBoot-Web依赖-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
         <!--引入lombok依赖-->
         <dependency>
             <groupId>org.projectlombok</groupId>
