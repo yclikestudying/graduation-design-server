@@ -447,22 +447,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      * 添加访客记录
      */
     @Override
-    public boolean addVisit(Long userId) {
+    public boolean addVisit(Long visitorId, Long visitedId) {
         // 校验参数
-        if (userId <= 0) {
+        if (visitorId <= 0 || visitedId <= 0) {
             log.error("添加访客记录 -----> 参数错误");
             throw new BusinessExceptionHandler(400, "参数错误");
         }
-        // 获取自己的id
-        Long myId = UserContext.getUserId();
         // 删除之前的访客记录
-        userMapper.deleteVisit(userId, myId);
+        userMapper.deleteVisit(visitorId, visitedId);
         // 保存至数据库
         Visitor visitor = new Visitor();
-        visitor.setVisitorId(userId);
-        visitor.setVisitedId(myId);
+        visitor.setVisitorId(visitorId);
+        visitor.setVisitedId(visitedId);
         try {
-            return userMapper.addVisit(userId, myId);
+            return userMapper.addVisit(visitorId, visitedId);
         } catch (Exception e) {
             log.error("添加访客记录 -----> 数据库插入失败");
             throw new RuntimeException(e);

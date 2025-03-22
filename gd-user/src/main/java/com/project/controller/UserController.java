@@ -184,7 +184,7 @@ public class UserController {
     @PostMapping("/addVisit")
     @ApiOperation(value = "添加访客记录")
     public BaseResponse<String> addVisit(@RequestBody Map<String, Long> map) {
-        boolean result = userService.addVisit(map.get("userId"));
+        boolean result = userService.addVisit(map.get("visitorId"), map.get("visitedId"));
         return result ? BaseResponse.success() : BaseResponse.fail();
     }
 

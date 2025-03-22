@@ -51,12 +51,12 @@ public interface UserMapper extends BaseMapper<User> {
     /**
      * 删除之前的访客记录
      */
-    boolean deleteVisit(@Param("userId") Long userId, @Param("myId") Long myId);
+    boolean deleteVisit(@Param("visitorId") Long visitorId, @Param("visitedId") Long visitedId);
 
     /**
      * 添加访客记录
      */
-    boolean addVisit(@Param("userId") Long userId, @Param("myId") Long myId);
+    boolean addVisit(@Param("visitorId") Long visitorId, @Param("visitedId") Long visitedId);
 
     /**
      * 查询我的访客记录

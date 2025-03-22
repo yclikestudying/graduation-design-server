@@ -81,7 +81,7 @@ public interface UserService extends IService<User> {
     /**
      * 添加访客记录
      */
-    boolean addVisit(Long userId);
+    boolean addVisit(Long visitorId, Long visitedId);
 
     /**
      * 查询访客记录

@@ -87,14 +87,14 @@
     <delete id="deleteVisit">
         delete
         from visitor
-        where visitor_id = #{userId}
-          and visited_id = #{myId}
+        where visitor_id = #{visitorId}
+          and visited_id = #{visitedId}
     </delete>
 
     <!--添加访客记录-->
     <insert id="addVisit">
         insert into visitor(visitor_id, visited_id)
-        values (#{userId}, #{myId})
+        values (#{visitorId}, #{visitedId})
     </insert>
 
     <!--查询我的访客记录-->
