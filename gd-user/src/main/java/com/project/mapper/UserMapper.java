@@ -3,6 +3,7 @@ package com.project.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.project.domain.User;
 import com.project.vo.user.QueryUserVO;
+import com.project.vo.visit.QueryVisitVO;
 import org.apache.ibatis.annotations.Param;
 
 import javax.management.Query;
@@ -46,4 +47,19 @@ public interface UserMapper extends BaseMapper<User> {
      * 查询互关用户id
      */
     List<Long> queryEach(@Param("userId") Long userId);
+
+    /**
+     * 删除之前的访客记录
+     */
+    boolean deleteVisit(@Param("userId") Long userId, @Param("myId") Long myId);
+
+    /**
+     * 添加访客记录
+     */
+    boolean addVisit(@Param("userId") Long userId, @Param("myId") Long myId);
+
+    /**
+     * 查询我的访客记录
+     */
+    List<QueryVisitVO> queryVisit(@Param("userid") Long userId);
 }

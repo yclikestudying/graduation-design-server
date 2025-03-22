@@ -8,6 +8,7 @@ import com.project.common.CodeEnum;
 import com.project.constant.RedisConstant;
 import com.project.constant.RoleConstant;
 import com.project.domain.User;
+import com.project.domain.Visitor;
 import com.project.dto.user.UserLoginRequest;
 import com.project.dto.user.UserRegisterRequest;
 import com.project.exception.BusinessExceptionHandler;
@@ -16,6 +17,7 @@ import com.project.service.UserService;
 import com.project.utils.*;
 import com.project.vo.user.QueryUserVO;
 import com.project.vo.user.UserVO;
+import com.project.vo.visit.QueryVisitVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -439,6 +441,48 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             list.add(queryUserVO);
         });
         return list;
+    }
+
+    /**
+     * 添加访客记录
+     */
+    @Override
+    public boolean addVisit(Long userId) {
+        // 校验参数
+        if (userId <= 0) {
+            log.error("添加访客记录 -----> 参数错误");
+            throw new BusinessExceptionHandler(400, "参数错误");
+        }
+        // 获取自己的id
+        Long myId = UserContext.getUserId();
+        // 删除之前的访客记录
+        userMapper.deleteVisit(userId, myId);
+        // 保存至数据库
+        Visitor visitor = new Visitor();
+        visitor.setVisitorId(userId);
+        visitor.setVisitedId(myId);
+        try {
+            return userMapper.addVisit(userId, myId);
+        } catch (Exception e) {
+            log.error("添加访客记录 -----> 数据库插入失败");
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * 查询访客记录
+     */
+    @Override
+    public List<QueryVisitVO> queryVisit() {
+        // 获取我的id
+        Long userId = UserContext.getUserId();
+        // 查询我的访客记录
+        try {
+            return userMapper.queryVisit(userId);
+        } catch (Exception e) {
+            log.error("查询访客记录 -----> 数据库查询失败");
+            throw new RuntimeException(e);
+        }
     }
 
     /**

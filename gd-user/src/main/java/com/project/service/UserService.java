@@ -6,6 +6,7 @@ import com.project.dto.user.UserLoginRequest;
 import com.project.dto.user.UserRegisterRequest;
 import com.project.vo.user.QueryUserVO;
 import com.project.vo.user.UserVO;
+import com.project.vo.visit.QueryVisitVO;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -76,4 +77,14 @@ public interface UserService extends IService<User> {
      * @param userId 用户id
      */
     List<QueryUserVO> queryEach(Long userId);
+
+    /**
+     * 添加访客记录
+     */
+    boolean addVisit(Long userId);
+
+    /**
+     * 查询访客记录
+     */
+    List<QueryVisitVO> queryVisit();
 }

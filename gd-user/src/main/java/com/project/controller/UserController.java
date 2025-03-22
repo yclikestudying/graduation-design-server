@@ -12,6 +12,7 @@ import com.project.utils.RedisUtil;
 import com.project.utils.UserContext;
 import com.project.vo.user.QueryUserVO;
 import com.project.vo.user.UserVO;
+import com.project.vo.visit.QueryVisitVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.validation.annotation.Validated;
@@ -174,6 +175,26 @@ public class UserController {
     @ApiOperation(value = "查询互关用户")
     public BaseResponse<List<QueryUserVO>> queryEach(@RequestParam(value = "userId", required = false) Long userId) {
         List<QueryUserVO> list = userService.queryEach(userId);
+        return BaseResponse.success(list);
+    }
+
+    /**
+     * 添加访客记录
+     */
+    @PostMapping("/addVisit")
+    @ApiOperation(value = "添加访客记录")
+    public BaseResponse<String> addVisit(@RequestBody Map<String, Long> map) {
+        boolean result = userService.addVisit(map.get("userId"));
+        return result ? BaseResponse.success() : BaseResponse.fail();
+    }
+
+    /**
+     * 查询访客记录
+     */
+    @GetMapping("/queryVisit")
+    @ApiOperation(value = "查询访客记录")
+    public BaseResponse<List<QueryVisitVO>> queryVisit() {
+        List<QueryVisitVO> list = userService.queryVisit();
         return BaseResponse.success(list);
     }
 }

@@ -128,4 +128,13 @@ create table if not exists message
     create_time     datetime default CURRENT_TIMESTAMP null comment '创建时间',
     is_read         int      default 0                 null comment '0-未读，1-已读',
     is_delete       int      default 0                 null comment '0-存在，1-删除'
-) comment '聊天消息表'
+) comment '聊天消息表';
+
+create table if not exists visitor
+(
+    id         bigint not null auto_increment primary key comment '主键',
+    visitor_id bigint not null comment '访问者id',
+    visited_id bigint not null comment '被访问者id',
+    visit_time datetime default CURRENT_TIMESTAMP comment '访问时间',
+    is_delete  tinyint  default 0 comment '0-存在，1-删除'
+) comment '访客记录表';

@@ -12,13 +12,17 @@
         from user
         where is_delete = 0
           and id != #{userId}
-          and user_name like concat('%', #{keyword}, '%')
+          and user_name like concat('%'
+            , #{keyword}
+            , '%')
     </select>
+
     <!--头像地址保存至avatar表-->
     <insert id="saveAvatar">
         INSERT INTO avatar (user_id, avatar)
         VALUES (#{userId}, #{avatar})
     </insert>
+
     <!--查询关注用户id-->
     <select id="queryFriendIds" parameterType="Long" resultType="Long">
         select followee_id
@@ -26,6 +30,7 @@
         where is_delete = 0
           and follower_id = #{userId}
     </select>
+
     <!--查询关注用户-->
     <select id="queryFriend" resultType="com.project.vo.user.QueryUserVO">
         select distinct
@@ -42,6 +47,7 @@
             #{id}
         </foreach>
     </select>
+
     <!--查询粉丝用户id-->
     <select id="queryFansIds" parameterType="Long" resultType="Long">
         select follower_id
@@ -49,6 +55,7 @@
         where is_delete = 0
           and followee_id = #{userId}
     </select>
+
     <!--查询粉丝用户-->
     <select id="queryFans" resultType="com.project.vo.user.QueryUserVO">
         select distinct
@@ -65,6 +72,7 @@
             #{id}
         </foreach>
     </select>
+
     <!--查询互关用户id-->
     <select id="queryEach" parameterType="Long" resultType="Long">
         select f1.followee_id
@@ -73,5 +81,33 @@
         where f1.is_delete = 0
           and f2.is_delete = 0
           and f1.follower_id = #{userId}
+    </select>
+
+    <!--删除之前的访客记录-->
+    <delete id="deleteVisit">
+        delete
+        from visitor
+        where visitor_id = #{userId}
+          and visited_id = #{myId}
+    </delete>
+
+    <!--添加访客记录-->
+    <insert id="addVisit">
+        insert into visitor(visitor_id, visited_id)
+        values (#{userId}, #{myId})
+    </insert>
+
+    <!--查询我的访客记录-->
+    <select id="queryVisit" resultType="com.project.vo.visit.QueryVisitVO">
+        select u.id,
+               u.user_avatar,
+               u.user_name,
+               u.user_profile,
+               v.visit_time
+        from user u
+                 join visitor v on u.id = v.visitor_id
+            and u.is_delete = 0
+            and v.is_delete = 0
+            and v.visited_id = #{userid}
     </select>
 </mapper>
