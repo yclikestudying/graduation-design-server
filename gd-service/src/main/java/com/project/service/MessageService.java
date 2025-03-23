@@ -6,6 +6,7 @@ import com.project.domain.Message;
 import com.project.dto.message.MessageDTO;
 import com.project.vo.message.QueryMessageVO;
 import com.project.vo.message.QueryNoReadMessageVO;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -36,4 +37,9 @@ public interface MessageService extends IService<Message> {
      * 查询未读消息总数
      */
     Integer queryNoReadTotal();
+
+    /**
+     * 上传图片
+     */
+    String uploadImage(MultipartFile file);
 }

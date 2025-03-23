@@ -7,6 +7,7 @@ import com.project.vo.message.QueryNoReadMessageVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -54,7 +55,16 @@ public class MessageController {
      */
     @GetMapping("/queryNoReadTotal")
     @ApiOperation(value = "查询未读消息总数")
-    public BaseResponse<Integer> queryNoReadTotal(){
+    public BaseResponse<Integer> queryNoReadTotal() {
         return BaseResponse.success(messageService.queryNoReadTotal());
+    }
+
+    /**
+     * 上传图片
+     */
+    @PostMapping("/uploadImage")
+    @ApiOperation(value = "上传图片")
+    public BaseResponse<String> uploadImage(@RequestParam("file") MultipartFile file) {
+        return BaseResponse.success(messageService.uploadImage(file));
     }
 }

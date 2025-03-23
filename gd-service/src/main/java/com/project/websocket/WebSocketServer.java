@@ -44,12 +44,9 @@ public class WebSocketServer {
         WebSocketDTO webSocketDTO = gson.fromJson(data, WebSocketDTO.class);
         // 获取类型
         String type = webSocketDTO.getType();
-        if (WebSocketConstant.DIRECT_MESSAGE_TEXT.equals(type)) {
+        if (WebSocketConstant.DIRECT_MESSAGE.equals(type)) {
             // 接收私聊消息
-            directMessageText(gson.fromJson(webSocketDTO.getData(), MessageDTO.class), type);
-        } else if (WebSocketConstant.DIRECT_MESSAGE_IMAGE.equals(type)) {
-            // 接收私聊消息图片
-
+            directMessage(gson.fromJson(webSocketDTO.getData(), MessageDTO.class), type);
         }
     }
 
@@ -73,7 +70,7 @@ public class WebSocketServer {
     }
 
     // 接收私聊消息
-    public void directMessageText(MessageDTO messageDTO, String type) {
+    public void directMessage(MessageDTO messageDTO, String type) {
         MessageService messageService = applicationContext.getBean(MessageService.class);
         boolean result = messageService.insertDirectMessage(messageDTO);
         if (result) {

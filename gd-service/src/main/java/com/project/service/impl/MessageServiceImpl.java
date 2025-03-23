@@ -9,14 +9,17 @@ import com.project.dto.message.MessageDTO;
 import com.project.exception.BusinessExceptionHandler;
 import com.project.mapper.MessageMapper;
 import com.project.service.MessageService;
+import com.project.utils.Upload;
 import com.project.utils.UserContext;
 import com.project.vo.message.QueryMessageVO;
 import com.project.vo.message.QueryNoReadMessageVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -153,6 +156,20 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message>
         return messageMapper.selectCount(new QueryWrapper<Message>()
                 .eq("accept_user_id", userId)
                 .eq("is_read", 0));
+    }
+
+    /**
+     * 上传图片
+     */
+    @Override
+    public String uploadImage(MultipartFile file) {
+        // 上传图片
+        try {
+            return Upload.uploadAvatar(file, "message");
+        } catch (IOException e) {
+            log.error("上传图片 -----> 上传阿里云失败");
+            throw new RuntimeException(e);
+        }
     }
 }
 
