@@ -1,4 +1,3 @@
-# 创建用户表
 create table if not exists user
 (
     id              bigint                             not null primary key auto_increment comment '用户id',
@@ -17,9 +16,8 @@ create table if not exists user
     update_time     datetime default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP comment '更新时间',
     user_role       varchar(10)                        null comment '用户权限(user,admin)',
     is_delete       tinyint  default 0                 null comment '0-存在 1-删除'
-);
+) comment '用户表';
 
-# 动态表
 create table article
 (
     id              bigint auto_increment comment '动态id'
@@ -30,9 +28,8 @@ create table article
     create_time     datetime default CURRENT_TIMESTAMP null comment '创建时间',
     is_show         tinyint  default 1                 not null comment '1-同意，0-拒绝',
     is_delete       tinyint  default 0                 null comment '0-存在 1-删除'
-);
+) comment '动态表';
 
-# 头像表
 create table if not exists avatar
 (
     id          bigint auto_increment primary key comment '主键',
@@ -40,9 +37,8 @@ create table if not exists avatar
     avatar      varchar(1024)                      not null comment '头像地址',
     create_time datetime default CURRENT_TIMESTAMP null comment '创建时间',
     is_delete   tinyint  default 0                 null comment '0-存在 1-删除'
-);
+) comment '头像表';
 
-# 关系表
 create table if not exists friend
 (
     id          bigint auto_increment comment '主键'
@@ -51,10 +47,8 @@ create table if not exists friend
     followee_id bigint                             not null comment '被关注者id',
     create_time datetime default CURRENT_TIMESTAMP null comment '建立关系时间',
     is_delete   int      default 0                 null comment '0-存在，1-删除'
-)
-    comment '关系表';
+) comment '关注表';
 
-# 商品表
 create table if not exists goods
 (
     id              bigint auto_increment comment '主键'
@@ -67,9 +61,8 @@ create table if not exists goods
     create_time     datetime default CURRENT_TIMESTAMP null comment '创建时间',
     is_show         tinyint  default 1                 not null comment '1-同意，0-拒绝',
     is_delete       tinyint  default 0                 not null comment '0-存在 1-已删除'
-);
+) comment '闲置商品表';
 
-# 跑腿服务表
 create table if not exists express
 (
     id              bigint auto_increment comment '主键'
@@ -79,9 +72,8 @@ create table if not exists express
     create_time     datetime default CURRENT_TIMESTAMP null comment '发布时间',
     is_show         tinyint  default 1                 not null comment '1-同意，0-拒绝',
     is_delete       tinyint  default 0                 null comment '0-存在 1-已删除'
-);
+) comment '跑腿服务表';
 
-# 寻物启事表
 create table if not exists lost
 (
     id               bigint auto_increment comment '主键'
@@ -94,7 +86,7 @@ create table if not exists lost
     create_time      datetime default CURRENT_TIMESTAMP null comment '发布时间',
     is_show          tinyint  default 1                 not null comment '1-同意，0-拒绝',
     is_delete        tinyint  default 0                 not null comment '0-存在 1-已删除'
-);
+) comment '寻物启事表';
 
 CREATE TABLE IF NOT EXISTS activity
 (
@@ -128,7 +120,7 @@ create table if not exists message
     create_time     datetime default CURRENT_TIMESTAMP null comment '创建时间',
     is_read         int      default 0                 null comment '0-未读，1-已读',
     is_delete       int      default 0                 null comment '0-存在，1-删除'
-) comment '聊天消息表';
+) comment '私聊聊天消息表';
 
 create table if not exists visitor
 (
@@ -138,3 +130,19 @@ create table if not exists visitor
     visit_time datetime default CURRENT_TIMESTAMP comment '访问时间',
     is_delete  tinyint  default 0 comment '0-存在，1-删除'
 ) comment '访客记录表';
+
+create table if not exists group_message
+(
+    id              bigint                         not null auto_increment comment '群聊消息表id',
+    activity_id     bigint                         not null comment '群id 关联 activity表id',
+    send_user_id    bigint                         not null comment '发送用户id 关联 user表id',
+    message_type    enum ('text', 'image', 'file') not null comment '消息类型（text/image/file）',
+    message_content text                           not null comment '消息内容',
+    send_time       datetime default CURRENT_TIMESTAMP comment '发送时间',
+    is_delete       tinyint  default 0 comment '0-存在，1-删除',
+    primary key (id),
+    index idx_activity_id (activity_id),
+    index idx_send_user_id (send_user_id),
+    foreign key (activity_id) references activity (id) on delete cascade on update cascade,
+    foreign key (send_user_id) references user (id) on delete cascade on update cascade
+) comment '群聊消息表';
