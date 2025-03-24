@@ -3,6 +3,8 @@ package com.project.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.project.domain.ActivityRelation;
+import com.project.vo.activityRelation.ActivityRelationVO;
+import org.apache.ibatis.annotations.Param;
 
 /**
 * @author Lenovo

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.project.domain.Activity;
 import com.project.vo.activity.QueryActivityVO;
 import com.project.vo.activity.QueryOneActivityVO;
+import com.project.vo.activityRelation.ActivityRelationVO;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -47,4 +48,9 @@ public interface ActivityService extends IService<Activity> {
      * 查询活动数量
      */
     Integer queryCount();
+
+    /**
+     * 获取群聊名称和人数
+     */
+    ActivityRelationVO queryNameAndCount(Long activityId);
 }

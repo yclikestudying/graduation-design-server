@@ -3,6 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.project.mapper.ActivityMapper">
+
     <!--查询活动-->
     <select id="queryActivity" resultType="com.project.vo.activity.QueryActivityVO">
         select id,
@@ -25,6 +26,7 @@
         </if>
         order by create_time desc
     </select>
+
     <!--根据id查询活动-->
     <select id="queryActivityById" parameterType="Long" resultType="com.project.vo.activity.QueryOneActivityVO">
         select u.user_avatar,
@@ -39,5 +41,17 @@
         where u.is_delete = 0
           and a.is_delete = 0
           and a.id = #{activityId}
+    </select>
+
+    <!--查询群聊名称和群聊人数-->
+    <select id="queryNameAndCount" parameterType="Long" resultType="com.project.vo.activityRelation.ActivityRelationVO">
+        select a1.id,
+               a1.activity_name,
+               count(a2.id) as personCount
+        from activity a1 join activity_relation a2 on a1.id = a2.activity_id
+        where a1.is_delete = 0
+          and a2.is_delete = 0
+          and a1.id = #{activityId}
+        group by a1.id, a1.activity_name
     </select>
 </mapper>

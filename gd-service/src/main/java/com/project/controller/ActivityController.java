@@ -4,6 +4,7 @@ import com.project.common.BaseResponse;
 import com.project.service.ActivityService;
 import com.project.vo.activity.QueryActivityVO;
 import com.project.vo.activity.QueryOneActivityVO;
+import com.project.vo.activityRelation.ActivityRelationVO;
 import com.project.vo.lost.QueryLostVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -91,5 +92,15 @@ public class ActivityController {
     public BaseResponse<Integer> queryCount() {
         Integer count = activityService.queryCount();
         return BaseResponse.success(count);
+    }
+
+    /**
+     * 获取群聊名称和人数
+     */
+    @GetMapping("/queryNameAndCount/{activityId}")
+    @ApiOperation(value = "获取群聊名称和人数")
+    public BaseResponse<ActivityRelationVO> queryNameAndCount(@PathVariable("activityId") Long activityId) {
+        ActivityRelationVO activityRelationVO = activityService.queryNameAndCount(activityId);
+        return BaseResponse.success(activityRelationVO);
     }
 }

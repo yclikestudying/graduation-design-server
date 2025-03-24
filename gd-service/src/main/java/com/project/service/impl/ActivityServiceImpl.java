@@ -12,6 +12,7 @@ import com.project.utils.Upload;
 import com.project.utils.UserContext;
 import com.project.vo.activity.QueryActivityVO;
 import com.project.vo.activity.QueryOneActivityVO;
+import com.project.vo.activityRelation.ActivityRelationVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -165,6 +166,25 @@ public class ActivityServiceImpl extends ServiceImpl<ActivityMapper, Activity>
         Long userId = UserContext.getUserId();
         // 查询活动数量
         return activityMapper.selectCount(new QueryWrapper<Activity>().eq("user_id", userId));
+    }
+
+    /**
+     * 获取群聊名称和人数
+     */
+    @Override
+    public ActivityRelationVO queryNameAndCount(Long activityId) {
+        // 校验参数
+        if (activityId <= 0) {
+            log.error("获取群聊名称和人数 -----> 参数错误");
+            throw new BusinessExceptionHandler(400, "参数错误");
+        }
+        // 查询数据库
+        try {
+            return activityMapper.queryNameAndCount(activityId);
+        } catch (Exception e) {
+            log.error("获取群聊名称和人数 -----> 数据库查询失败");
+            throw new RuntimeException(e);
+        }
     }
 
     /**
