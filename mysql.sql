@@ -143,6 +143,6 @@ create table if not exists group_message
     primary key (id),
     index idx_activity_id (activity_id),
     index idx_send_user_id (send_user_id),
-    foreign key (activity_id) references activity (id) on delete cascade on update cascade,
-    foreign key (send_user_id) references user (id) on delete cascade on update cascade
+    foreign key (activity_id) references activity (id) on delete cascade,
+    foreign key (send_user_id) references user (id) on delete cascade
 ) comment '群聊消息表';

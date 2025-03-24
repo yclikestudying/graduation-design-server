@@ -4,6 +4,7 @@ package com.project.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.project.domain.Message;
 import com.project.dto.message.MessageDTO;
+import com.project.vo.message.QueryGroupMessageVO;
 import com.project.vo.message.QueryMessageVO;
 import com.project.vo.message.QueryNoReadMessageVO;
 import org.springframework.web.multipart.MultipartFile;
@@ -42,4 +43,9 @@ public interface MessageService extends IService<Message> {
      * 上传图片
      */
     String uploadImage(MultipartFile file);
+
+    /**
+     * 查询群聊消息
+     */
+    List<QueryGroupMessageVO> queryGroupMessage(Long activityId);
 }

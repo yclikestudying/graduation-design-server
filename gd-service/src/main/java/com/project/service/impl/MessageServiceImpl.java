@@ -11,6 +11,7 @@ import com.project.mapper.MessageMapper;
 import com.project.service.MessageService;
 import com.project.utils.Upload;
 import com.project.utils.UserContext;
+import com.project.vo.message.QueryGroupMessageVO;
 import com.project.vo.message.QueryMessageVO;
 import com.project.vo.message.QueryNoReadMessageVO;
 import lombok.extern.slf4j.Slf4j;
@@ -168,6 +169,25 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message>
             return Upload.uploadAvatar(file, "message");
         } catch (IOException e) {
             log.error("上传图片 -----> 上传阿里云失败");
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * 查询群聊消息
+     */
+    @Override
+    public List<QueryGroupMessageVO> queryGroupMessage(Long activityId) {
+        // 校验参数
+        if (activityId <= 0) {
+            log.error("查询群聊消息 -----> 参数错误");
+            throw new BusinessExceptionHandler(400, "参数错误");
+        }
+        // 查询数据库记录
+        try {
+            return messageMapper.queryGroupMessage(activityId);
+        } catch (Exception e) {
+            log.error("查询群聊消息 -----> 数据库查询失败");
             throw new RuntimeException(e);
         }
     }

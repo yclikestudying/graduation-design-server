@@ -2,6 +2,7 @@ package com.project.controller;
 
 import com.project.common.BaseResponse;
 import com.project.service.MessageService;
+import com.project.vo.message.QueryGroupMessageVO;
 import com.project.vo.message.QueryMessageVO;
 import com.project.vo.message.QueryNoReadMessageVO;
 import io.swagger.annotations.Api;
@@ -66,5 +67,15 @@ public class MessageController {
     @ApiOperation(value = "上传图片")
     public BaseResponse<String> uploadImage(@RequestParam("file") MultipartFile file) {
         return BaseResponse.success(messageService.uploadImage(file));
+    }
+
+    /**
+     * 查询群聊消息
+     */
+    @GetMapping("/queryGroupMessage/{activityId}")
+    @ApiOperation(value = "查询群聊消息")
+    public BaseResponse<List<QueryGroupMessageVO>> queryGroupMessage(@PathVariable("activityId") Long activityId) {
+        List<QueryGroupMessageVO> list = messageService.queryGroupMessage(activityId);
+        return BaseResponse.success(list);
     }
 }
