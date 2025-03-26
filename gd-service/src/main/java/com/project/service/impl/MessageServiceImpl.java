@@ -123,7 +123,7 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message>
         List<Message> messages = messageMapper.selectList(new QueryWrapper<Message>()
                 .select("send_user_id")
                 .eq("accept_user_id", userId));
-        List<Long> idList = messages.stream().map(Message::getSendUserId).collect(Collectors.toList());
+        Set<Long> idList = messages.stream().map(Message::getSendUserId).collect(Collectors.toSet());
         // 根据 idList 和 userId 查询最新的一条消息集合
         List<QueryNoReadMessageVO> queryNoReadMessageVOS = new ArrayList<>();
         idList.forEach(id -> {
