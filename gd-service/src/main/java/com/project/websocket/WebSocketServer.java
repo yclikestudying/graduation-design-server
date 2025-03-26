@@ -2,21 +2,29 @@ package com.project.websocket;
 
 import com.google.gson.Gson;
 import com.project.constant.WebSocketConstant;
+import com.project.dto.message.GroupMessageDTO;
 import com.project.dto.message.MessageDTO;
 import com.project.dto.ws.WebSocketDTO;
+import com.project.service.ActivityRelationService;
+import com.project.service.GroupMessageService;
 import com.project.service.MessageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 @ServerEndpoint("/wsConnect/{userId}")
 @Component
@@ -26,6 +34,8 @@ public class WebSocketServer {
     private static final ConcurrentHashMap<Long, Session> webSocketMap = new ConcurrentHashMap<>();
     private static ApplicationContext applicationContext;
     private final Gson gson = new Gson();
+    @Resource
+    private ThreadPoolTaskExecutor executor;
 
     // 客户端与服务器建立连接
     @OnOpen
@@ -47,6 +57,8 @@ public class WebSocketServer {
         if (WebSocketConstant.DIRECT_MESSAGE.equals(type)) {
             // 接收私聊消息
             directMessage(gson.fromJson(webSocketDTO.getData(), MessageDTO.class), type);
+        } else if(WebSocketConstant.GROUP_MESSAGE.equals(type)) {
+            groupMessage(gson.fromJson(webSocketDTO.getData(), GroupMessageDTO.class), type);
         }
     }
 
@@ -83,10 +95,24 @@ public class WebSocketServer {
         }
     }
 
-    // 接收私聊图片
-//    public void directMessageImage(MessageImageDTO messageImageDTO, String type) {
-//        System.out.println(messageImageDTO);
-//    }
+    // 接收群聊消息
+    public void groupMessage(GroupMessageDTO groupMessageDTO, String type) {
+        GroupMessageService groupMessageService = applicationContext.getBean(GroupMessageService.class);
+        boolean result = groupMessageService.insertGroupMessage(groupMessageDTO);
+        if (result) {
+            // 群消息存储成功，获取该群id下的所有用户，然后进行消息推送
+            Long activityId = groupMessageDTO.getActivityId();
+            ActivityRelationService activityRelationService = applicationContext.getBean(ActivityRelationService.class);
+            List<Long> idList = activityRelationService.getUserIdsByActivityId(activityId);
+            // 循环推送
+            idList.forEach(id -> {
+                Map<String, String> map = new HashMap<>();
+                map.put("type", type);
+                map.put("data", gson.toJson(groupMessageDTO));
+                messageBroadcast(id, map);
+            });
+        }
+    }
 
     // 一对一消息广播
     public void messageBroadcast(Long userId, Map<String, String> map) {

@@ -158,17 +158,6 @@ public class ActivityServiceImpl extends ServiceImpl<ActivityMapper, Activity>
     }
 
     /**
-     * 查询活动数量
-     */
-    @Override
-    public Integer queryCount() {
-        // 获取我的id
-        Long userId = UserContext.getUserId();
-        // 查询活动数量
-        return activityMapper.selectCount(new QueryWrapper<Activity>().eq("user_id", userId));
-    }
-
-    /**
      * 获取群聊名称和人数
      */
     @Override
@@ -185,6 +174,21 @@ public class ActivityServiceImpl extends ServiceImpl<ActivityMapper, Activity>
             log.error("获取群聊名称和人数 -----> 数据库查询失败");
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * 查询用户所参见的活动（包括自己创建的）
+     */
+    @Override
+    public List<QueryActivityVO> queryJoinedActivity() {
+        // 获取我的id
+        Long userId = UserContext.getUserId();
+        // 查询我所参加的活动
+        List<QueryActivityVO> queryActivityVOS = activityMapper.queryJoinedActivity(userId);
+        return queryActivityVOS.stream().peek(queryActivityVO -> {
+            Integer count = activityRelationService.queryCount(queryActivityVO.getId());
+            queryActivityVO.setCurrentPeople(count);
+        }).collect(Collectors.toList());
     }
 
     /**

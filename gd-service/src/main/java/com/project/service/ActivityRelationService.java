@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.project.domain.ActivityRelation;
 import com.project.vo.activityRelation.ActivityRelationVO;
 
+import java.util.List;
+
 public interface ActivityRelationService extends IService<ActivityRelation> {
     /**
      * 加入活动
@@ -14,4 +16,14 @@ public interface ActivityRelationService extends IService<ActivityRelation> {
      * 查询当前活动人数
      */
     Integer queryCount(Long activityId);
+
+    /**
+     * 查询活动数量
+     */
+    Integer queryCount();
+
+    /**
+     * 查询该活动（群聊）下所有用户的id
+     */
+    List<Long> getUserIdsByActivityId(Long activityId);
 }

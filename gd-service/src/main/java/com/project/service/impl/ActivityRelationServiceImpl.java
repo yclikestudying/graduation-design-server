@@ -2,6 +2,8 @@ package com.project.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.project.common.CodeEnum;
+import com.project.domain.Activity;
 import com.project.domain.ActivityRelation;
 import com.project.exception.BusinessExceptionHandler;
 import com.project.mapper.ActivityRelationMapper;
@@ -13,6 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -75,6 +79,35 @@ public class ActivityRelationServiceImpl extends ServiceImpl<ActivityRelationMap
         return activityRelationMapper.selectCount(new QueryWrapper<ActivityRelation>()
                 .select("user_id")
                 .eq("activity_id", activityId));
+    }
+
+    /**
+     * 查询活动数量
+     */
+    @Override
+    public Integer queryCount() {
+        // 获取我的id
+        Long userId = UserContext.getUserId();
+        // 查询活动数量
+        return activityRelationMapper.selectCount(new QueryWrapper<ActivityRelation>().eq("user_id", userId));
+    }
+
+    /**
+     * 查询该活动（群聊）下所有用户的id
+     */
+    @Override
+    public List<Long> getUserIdsByActivityId(Long activityId) {
+        // 参数校验
+        if(activityId <= 0) {
+            log.error("查询该活动（群聊）下所有用户的id -----> 参数错误");
+            throw new BusinessExceptionHandler(CodeEnum.BAD_REQUEST.getCode());
+        }
+
+        // 进行数据库查询
+        List<ActivityRelation> activityRelations = activityRelationMapper.selectList(new QueryWrapper<ActivityRelation>()
+                .select("user_id")
+                .eq("activity_id", activityId));
+        return activityRelations.stream().map(ActivityRelation::getUserId).collect(Collectors.toList());
     }
 
     /**

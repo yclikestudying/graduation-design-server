@@ -45,12 +45,12 @@ public interface ActivityService extends IService<Activity> {
     QueryOneActivityVO queryActivityById(Long activityId);
 
     /**
-     * 查询活动数量
-     */
-    Integer queryCount();
-
-    /**
      * 获取群聊名称和人数
      */
     ActivityRelationVO queryNameAndCount(Long activityId);
+
+    /**
+     * 查询用户所参见的活动（包括自己创建的）
+     */
+    List<QueryActivityVO> queryJoinedActivity();
 }

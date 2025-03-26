@@ -4,7 +4,9 @@ package com.project.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.project.domain.GroupMessage;
 import com.project.domain.Message;
+import com.project.dto.message.GroupMessageDTO;
 import com.project.dto.message.MessageDTO;
 import com.project.exception.BusinessExceptionHandler;
 import com.project.mapper.MessageMapper;
@@ -169,25 +171,6 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message>
             return Upload.uploadAvatar(file, "message");
         } catch (IOException e) {
             log.error("上传图片 -----> 上传阿里云失败");
-            throw new RuntimeException(e);
-        }
-    }
-
-    /**
-     * 查询群聊消息
-     */
-    @Override
-    public List<QueryGroupMessageVO> queryGroupMessage(Long activityId) {
-        // 校验参数
-        if (activityId <= 0) {
-            log.error("查询群聊消息 -----> 参数错误");
-            throw new BusinessExceptionHandler(400, "参数错误");
-        }
-        // 查询数据库记录
-        try {
-            return messageMapper.queryGroupMessage(activityId);
-        } catch (Exception e) {
-            log.error("查询群聊消息 -----> 数据库查询失败");
             throw new RuntimeException(e);
         }
     }

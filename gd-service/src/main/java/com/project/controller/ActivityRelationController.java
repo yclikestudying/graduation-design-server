@@ -26,4 +26,14 @@ public class ActivityRelationController {
         boolean result = activityRelationService.addActivity(map.get("activityId"));
         return result ? BaseResponse.success() : BaseResponse.fail();
     }
+
+    /**
+     * 查询群聊（活动）数量
+     */
+    @GetMapping("/queryCount")
+    @ApiOperation(value = "查询活动数量")
+    public BaseResponse<Integer> queryCount() {
+        Integer count = activityRelationService.queryCount();
+        return BaseResponse.success(count);
+    }
 }

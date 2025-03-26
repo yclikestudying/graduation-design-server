@@ -54,4 +54,22 @@
           and a1.id = #{activityId}
         group by a1.id, a1.activity_name
     </select>
+
+    <!--查询所参见的活动-->
+    <select id="queryJoinedActivity" parameterType="Long" resultType="com.project.vo.activity.QueryActivityVO">
+        select id,
+               user_id,
+               activity_name,
+               activity_description,
+               activity_max_people,
+               activity_photo,
+               create_time
+        from activity
+        where is_delete = 0
+          and id in (select activity_id
+                     from activity_relation
+                     where is_delete = 0
+                       and user_id = #{userId})
+        order by create_time desc
+    </select>
 </mapper>

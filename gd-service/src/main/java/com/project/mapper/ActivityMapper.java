@@ -24,4 +24,9 @@ public interface ActivityMapper extends BaseMapper<Activity> {
      * 获取群聊名称和人数
      */
     ActivityRelationVO queryNameAndCount(@Param("activityId") Long activityId);
+
+    /**
+     * 查询我所参见的活动
+     */
+    List<QueryActivityVO> queryJoinedActivity(@Param("userId") Long userId);
 }

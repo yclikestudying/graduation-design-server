@@ -17,7 +17,7 @@ import java.util.Objects;
 
 @RestController
 @RequestMapping("/message")
-@Api(tags = "通信模块")
+@Api(tags = "私聊消息模块")
 public class MessageController {
     @Resource
     private MessageService messageService;
@@ -67,15 +67,5 @@ public class MessageController {
     @ApiOperation(value = "上传图片")
     public BaseResponse<String> uploadImage(@RequestParam("file") MultipartFile file) {
         return BaseResponse.success(messageService.uploadImage(file));
-    }
-
-    /**
-     * 查询群聊消息
-     */
-    @GetMapping("/queryGroupMessage/{activityId}")
-    @ApiOperation(value = "查询群聊消息")
-    public BaseResponse<List<QueryGroupMessageVO>> queryGroupMessage(@PathVariable("activityId") Long activityId) {
-        List<QueryGroupMessageVO> list = messageService.queryGroupMessage(activityId);
-        return BaseResponse.success(list);
     }
 }

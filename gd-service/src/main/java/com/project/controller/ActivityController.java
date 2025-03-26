@@ -45,6 +45,16 @@ public class ActivityController {
     }
 
     /**
+     * 查询用户所参见的活动（包括自己创建的）
+     */
+    @GetMapping("/queryJoinedActivity")
+    @ApiOperation(value = "查询所参加的活动（包括自己创建的）")
+    public BaseResponse<List<QueryActivityVO>> queryJoinedActivity() {
+        List<QueryActivityVO> list = activityService.queryJoinedActivity();
+        return BaseResponse.success(list);
+    }
+
+    /**
      * 查询所有活动
      */
     @GetMapping("/queryAllActivity")
@@ -82,16 +92,6 @@ public class ActivityController {
     public BaseResponse<QueryOneActivityVO> queryActivityById(@RequestParam("activityId") Long activityId) {
         QueryOneActivityVO list = activityService.queryActivityById(activityId);
         return BaseResponse.success(list);
-    }
-
-    /**
-     * 查询活动数量
-     */
-    @GetMapping("/queryCount")
-    @ApiOperation(value = "查询活动数量")
-    public BaseResponse<Integer> queryCount() {
-        Integer count = activityService.queryCount();
-        return BaseResponse.success(count);
     }
 
     /**
