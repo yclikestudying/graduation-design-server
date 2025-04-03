@@ -7,6 +7,7 @@ import com.project.domain.Article;
 import com.project.exception.BusinessExceptionHandler;
 import com.project.mapper.ArticleMapper;
 import com.project.service.ArticleService;
+import com.project.service.LikesService;
 import com.project.utils.RedisUtil;
 import com.project.utils.Upload;
 import com.project.utils.UserContext;
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -30,6 +32,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
         implements ArticleService {
     @Resource
     private ArticleMapper articleMapper;
+    @Resource
+    private LikesService likesService;
     @Resource
     private ThreadPoolTaskExecutor executor;
     @Resource
@@ -86,20 +90,35 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
 
     /**
      * 查询用户动态
-     * @param userId 用户id
+     * @param id 用户id
      */
     @Override
-    public List<QueryArticleVO> queryArticle(Long userId) {
+    public List<QueryArticleVO> queryArticle(Long id) {
         // 校验参数
-        userId = checkUserId(userId);
+        Long userId = checkUserId(id);
         // todo 查询 Redis 记录
         // 查询数据库
+        List<QueryArticleVO> queryArticleVOS;
         try {
-            return articleMapper.queryUser(userId);
+            queryArticleVOS = articleMapper.queryUser(userId);
+
         } catch (Exception e) {
             log.error("查询用户动态----->数据库查询失败");
             throw new RuntimeException(e);
         }
+
+        // 根据动态id查询点赞数以及自己是否进行点赞
+        if (!queryArticleVOS.isEmpty()) {
+            return queryArticleVOS.stream().peek(queryArticleVO -> {
+                // 查询动态点赞数
+                Integer count = likesService.queryLikeCount(queryArticleVO.getId());
+                queryArticleVO.setLikeCount(count);
+                // 查询是否对当前动态进行过点赞
+                boolean result = likesService.queryUserLike(userId, queryArticleVO.getId());
+                queryArticleVO.setLike(result);
+            }).collect(Collectors.toList());
+        }
+        return null;
     }
 
     /**
@@ -114,12 +133,23 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
             throw new BusinessExceptionHandler(400, "参数错误");
         }
         // 查询数据库
+        QueryArticleVO queryArticleVO;
         try {
-            return articleMapper.queryOne(articleId);
+            queryArticleVO = articleMapper.queryOne(articleId);
         } catch (Exception e) {
             log.error("根据id查询动态信息----->查询数据库失败");
             throw new RuntimeException(e);
         }
+
+        // 根据动态id查询点赞数以及自己是否进行点赞
+        // 查询动态点赞数
+        Integer count = likesService.queryLikeCount(queryArticleVO.getId());
+        queryArticleVO.setLikeCount(count);
+        // 查询是否对当前动态进行过点赞
+        Long userId = UserContext.getUserId();
+        boolean result = likesService.queryUserLike(userId, queryArticleVO.getId());
+        queryArticleVO.setLike(result);
+        return queryArticleVO;
     }
 
     /**
@@ -148,12 +178,27 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
     @Override
     public List<QueryArticleVO> queryArticleOfSchool() {
         // 查询数据库记录
+        List<QueryArticleVO> queryArticleVOS;
         try {
-            return articleMapper.queryArticleOfSchool();
+            queryArticleVOS = articleMapper.queryArticleOfSchool();
         } catch (Exception e) {
             log.error("查询校园动态----->数据库查询失败");
             throw new RuntimeException(e);
         }
+
+        // 根据动态id查询点赞数以及自己是否进行点赞
+        if (!queryArticleVOS.isEmpty()) {
+            Long userId = UserContext.getUserId();
+            return queryArticleVOS.stream().peek(queryArticleVO -> {
+                // 查询动态点赞数
+                Integer count = likesService.queryLikeCount(queryArticleVO.getId());
+                queryArticleVO.setLikeCount(count);
+                // 查询是否对当前动态进行过点赞
+                boolean result = likesService.queryUserLike(userId, queryArticleVO.getId());
+                queryArticleVO.setLike(result);
+            }).collect(Collectors.toList());
+        }
+        return null;
     }
 
     /**
@@ -210,12 +255,27 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
             throw new BusinessExceptionHandler(400, "参数错误");
         }
         // 查询数据库
+        List<QueryArticleVO> queryArticleVOS;
         try {
-            return articleMapper.queryArticleByKeyword(keyword);
+            queryArticleVOS = articleMapper.queryArticleByKeyword(keyword);
         } catch (Exception e) {
             log.error("关键字模糊查询动态 -----> 数据库查询失败");
             throw new RuntimeException(e);
         }
+
+        // 根据动态id查询点赞数以及自己是否进行点赞
+        if (!queryArticleVOS.isEmpty()) {
+            Long userId = UserContext.getUserId();
+            return queryArticleVOS.stream().peek(queryArticleVO -> {
+                // 查询动态点赞数
+                Integer count = likesService.queryLikeCount(queryArticleVO.getId());
+                queryArticleVO.setLikeCount(count);
+                // 查询是否对当前动态进行过点赞
+                boolean result = likesService.queryUserLike(userId, queryArticleVO.getId());
+                queryArticleVO.setLike(result);
+            }).collect(Collectors.toList());
+        }
+        return null;
     }
 
     /**

@@ -25,7 +25,7 @@ public class FriendServiceImpl extends ServiceImpl<FriendMapper, Friend>
         // 不能关注自己
         if (Objects.equals(followerId, followeeId)) {
             log.error("添加关注----->不能关注自己");
-            throw new BusinessExceptionHandler(400, "参数错误");
+            throw new BusinessExceptionHandler(400, "不能关注自己");
         }
         // 查询数据库中是否已有
         Friend one = friendMapper.selectOne(new QueryWrapper<Friend>().eq("follower_id", followerId)

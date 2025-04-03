@@ -146,3 +146,13 @@ create table if not exists group_message
     foreign key (activity_id) references activity (id) on delete cascade,
     foreign key (send_user_id) references user (id) on delete cascade
 ) comment '群聊消息表';
+
+create table if not exists likes
+(
+    like_id         bigint auto_increment comment '点赞表主键',
+    like_article_id int                                null comment '点赞动态id',
+    like_user_id    bigint                             not null comment '点赞用户id',
+    like_time       datetime default CURRENT_TIMESTAMP null comment '点赞时间',
+    is_delete       int      default 0                 null comment '0-未删除 1-已删除',
+    primary key (like_id)
+) comment '点赞表';

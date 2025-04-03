@@ -39,6 +39,16 @@ public class QueryArticleVO implements Serializable {
     private String articlePhotos;
 
     /**
+     * 点赞数量
+     */
+    private Integer likeCount;
+
+    /**
+     * 自己对当前动态是否进行点赞
+     */
+    private boolean isLike;
+
+    /**
      * 创建时间
      */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
