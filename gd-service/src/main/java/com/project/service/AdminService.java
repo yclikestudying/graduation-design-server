@@ -16,4 +16,9 @@ public interface AdminService {
      * 模糊查询普通用户
      */
     Map<String, Object> queryLikeUser(String keyword, Integer current, Integer size);
+
+    /**
+     * 删除单个用户
+     */
+    boolean deleteUser(Long userId);
 }

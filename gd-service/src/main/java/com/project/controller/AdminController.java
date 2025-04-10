@@ -5,10 +5,7 @@ import com.project.service.AdminService;
 import com.project.vo.user.UserVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -39,5 +36,15 @@ public class AdminController {
     public BaseResponse<Map<String, Object>> queryLikeUser(@RequestParam("keyword") String keyword, @RequestParam("current") Integer current, @RequestParam("size") Integer size) {
         Map<String, Object> map = adminService.queryLikeUser(keyword, current, size);
         return BaseResponse.success(map);
+    }
+
+    /**
+     * 删除单个用户
+     */
+    @DeleteMapping("/deleteUser")
+    @ApiOperation(value = "删除单个用户")
+    public BaseResponse<String> deleteUser(@RequestParam("userId") Long userId){
+        boolean result = adminService.deleteUser(userId);
+        return result ? BaseResponse.success() : BaseResponse.fail();
     }
 }

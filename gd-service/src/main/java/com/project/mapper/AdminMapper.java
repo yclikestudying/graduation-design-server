@@ -14,4 +14,9 @@ public interface AdminMapper {
      * 模糊查询普通用户
      */
     Page<UserVO> queryLikeUser(Page<UserVO> page, @Param("keyword") String keyword);
+
+    /**
+     * 删除单个用户
+     */
+    boolean deleteUser(@Param("userId") Long userId);
 }

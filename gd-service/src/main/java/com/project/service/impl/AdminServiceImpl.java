@@ -59,4 +59,19 @@ public class AdminServiceImpl implements AdminService {
         map.put("total", userVOPage.getTotal());
         return map;
     }
+
+    /**
+     * 删除单个用户
+     */
+    @Override
+    public boolean deleteUser(Long userId) {
+        // 参数校验
+        if (userId <= 0) {
+            log.error("删除单个用户 -----> 用户id错误");
+            throw new BusinessExceptionHandler(400, "用户id错误");
+        }
+
+        // 执行操作
+        return adminMapper.deleteUser(userId);
+    }
 }

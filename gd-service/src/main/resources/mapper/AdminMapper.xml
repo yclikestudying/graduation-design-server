@@ -44,4 +44,9 @@
           and user_role = 'user'
           and (user_name like CONCAT('%', #{keyword}, '%') or user_phone like CONCAT('%', #{keyword}, '%'))
     </select>
+
+    <!--删除单个用户-->
+    <update id="deleteUser">
+        update user set is_delete = 1 where id = #{userId}
+    </update>
 </mapper>
