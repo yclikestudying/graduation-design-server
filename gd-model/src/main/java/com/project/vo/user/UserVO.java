@@ -5,6 +5,9 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.project.json.CustomPasswordSerializer;
+import com.project.json.CustomPhoneSerializer;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -25,11 +28,13 @@ public class UserVO implements Serializable {
     /**
      * 用户手机号码
      */
+    @JsonSerialize(using = CustomPhoneSerializer.class)
     private String userPhone;
 
     /**
      * 用户密码
      */
+    @JsonSerialize(using = CustomPasswordSerializer.class)
     private String userPassword;
 
     /**

@@ -24,6 +24,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .excludePathPatterns(
                         "/user/login",
                         "/user/register",
+                        "/admin/login",
                         "/doc.html",
                         "/doc.html/**",
                         "/webjars/**",

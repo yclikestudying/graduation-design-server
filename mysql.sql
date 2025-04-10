@@ -30,15 +30,6 @@ create table article
     is_delete       tinyint  default 0                 null comment '0-存在 1-删除'
 ) comment '动态表';
 
-create table if not exists avatar
-(
-    id          bigint auto_increment primary key comment '主键',
-    user_id     bigint                             not null comment '用户id',
-    avatar      varchar(1024)                      not null comment '头像地址',
-    create_time datetime default CURRENT_TIMESTAMP null comment '创建时间',
-    is_delete   tinyint  default 0                 null comment '0-存在 1-删除'
-) comment '头像表';
-
 create table if not exists friend
 (
     id          bigint auto_increment comment '主键'
@@ -56,8 +47,8 @@ create table if not exists goods
     user_id         bigint                             not null comment '发表用户id',
     goods_content   text                               null comment '商品内容',
     goods_photos    varchar(10240)                     null comment '商品图片',
-    goods_old_price int                                null comment '商品原价格',
-    goods_price     int                                null comment '商品新价格',
+    goods_old_price decimal(10, 2)                             null comment '商品原价格',
+    goods_price     decimal(10, 2)                           null comment '商品新价格',
     create_time     datetime default CURRENT_TIMESTAMP null comment '创建时间',
     is_show         tinyint  default 1                 not null comment '1-同意，0-拒绝',
     is_delete       tinyint  default 0                 not null comment '0-存在 1-已删除'
