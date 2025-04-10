@@ -22,12 +22,22 @@ public class AdminController {
     private AdminService adminService;
 
     /**
-     * 查询普通用户
+     * 分页查询普通用户
      */
     @GetMapping("/queryUser")
-    @ApiOperation(value = "查询普通用户")
+    @ApiOperation(value = "分页查询普通用户")
     public BaseResponse<Map<String, Object>> queryUser(@RequestParam("current") Integer current, @RequestParam("size") Integer size) {
         Map<String, Object> map = adminService.queryUser(current, size);
+        return BaseResponse.success(map);
+    }
+
+    /**
+     * 模糊查询普通用户
+     */
+    @GetMapping("/queryLikeUser")
+    @ApiOperation(value = "模糊查询普通用户")
+    public BaseResponse<Map<String, Object>> queryLikeUser(@RequestParam("keyword") String keyword, @RequestParam("current") Integer current, @RequestParam("size") Integer size) {
+        Map<String, Object> map = adminService.queryLikeUser(keyword, current, size);
         return BaseResponse.success(map);
     }
 }

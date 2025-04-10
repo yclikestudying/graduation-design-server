@@ -6,6 +6,7 @@ import com.project.mapper.AdminMapper;
 import com.project.service.AdminService;
 import com.project.vo.user.UserVO;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -33,6 +34,26 @@ public class AdminServiceImpl implements AdminService {
         // 数据库查询
         Page<UserVO> page = new Page<>(current, size);
         Page<UserVO> userVOPage = adminMapper.queryUser(page);
+        Map<String, Object> map = new HashMap<>();
+        map.put("user", userVOPage.getRecords());
+        map.put("total", userVOPage.getTotal());
+        return map;
+    }
+
+    /**
+     * 模糊查询普通用户
+     */
+    @Override
+    public Map<String, Object> queryLikeUser(String keyword, Integer current, Integer size) {
+        // 校验参数
+        if (current <= 0 || size <= 0 || StringUtils.isBlank(keyword)) {
+            log.error("分页查询用户 -----> 参数错误");
+            throw new BusinessExceptionHandler(400, "参数错误");
+        }
+
+        // 数据库查询
+        Page<UserVO> page = new Page<>(current, size);
+        Page<UserVO> userVOPage = adminMapper.queryLikeUser(page, keyword);
         Map<String, Object> map = new HashMap<>();
         map.put("user", userVOPage.getRecords());
         map.put("total", userVOPage.getTotal());

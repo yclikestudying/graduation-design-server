@@ -22,4 +22,26 @@
         where user_role = 'user'
           and is_delete = 0
     </select>
+
+    <!--用户名或手机号模糊查询用户-->
+    <select id="queryLikeUser" resultType="com.project.vo.user.UserVO">
+        select id,
+               user_name,
+               user_phone,
+               user_password,
+               user_avatar,
+               user_gender,
+               user_birthday,
+               user_profile,
+               user_location,
+               user_hometown,
+               user_profession,
+               user_tags,
+               create_time,
+               user_role
+        from user
+        where is_delete = 0
+          and user_role = 'user'
+          and (user_name like CONCAT('%', #{keyword}, '%') or user_phone like CONCAT('%', #{keyword}, '%'))
+    </select>
 </mapper>
