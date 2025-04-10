@@ -21,4 +21,9 @@ public interface AdminService {
      * 删除单个用户
      */
     boolean deleteUser(Long userId);
+
+    /**
+     * 批量删除用户
+     */
+    boolean deleteUserBatch(List<Long> userIdList);
 }

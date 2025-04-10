@@ -74,4 +74,19 @@ public class AdminServiceImpl implements AdminService {
         // 执行操作
         return adminMapper.deleteUser(userId);
     }
+
+    /**
+     * 批量删除用户
+     */
+    @Override
+    public boolean deleteUserBatch(List<Long> userIdList) {
+        // 参数校验
+        if (userIdList.isEmpty()) {
+            log.error("批量删除用户 -----> 参数错误");
+            throw new BusinessExceptionHandler(400, "参数错误");
+        }
+
+        // 执行操作
+        return adminMapper.deleteUserBatch(userIdList);
+    }
 }

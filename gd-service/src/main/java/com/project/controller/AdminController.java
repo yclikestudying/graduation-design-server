@@ -47,4 +47,14 @@ public class AdminController {
         boolean result = adminService.deleteUser(userId);
         return result ? BaseResponse.success() : BaseResponse.fail();
     }
+
+    /**
+     * 批量删除用户
+     */
+    @PutMapping("/deleteUserBatch")
+    @ApiOperation(value = "批量删除用户")
+    public BaseResponse<String> deleteUserBatch(@RequestBody List<Long> userIdList){
+        boolean result = adminService.deleteUserBatch(userIdList);
+        return result ? BaseResponse.success() : BaseResponse.fail();
+    }
 }

@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.project.vo.user.UserVO;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 public interface AdminMapper {
     /**
      * 查询普通用户
@@ -19,4 +21,9 @@ public interface AdminMapper {
      * 删除单个用户
      */
     boolean deleteUser(@Param("userId") Long userId);
+
+    /**
+     * 批量删除用户
+     */
+    boolean deleteUserBatch(@Param("userIdList") List<Long> userIdList);
 }
