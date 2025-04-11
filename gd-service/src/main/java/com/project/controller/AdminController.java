@@ -57,4 +57,14 @@ public class AdminController {
         boolean result = adminService.deleteUserBatch(userIdList);
         return result ? BaseResponse.success() : BaseResponse.fail();
     }
+
+    /**
+     * 设置用户为管理员
+     */
+    @PostMapping("/settingAdmin")
+    @ApiOperation(value = "设置用户为管理员")
+    public BaseResponse<String> settingAdmin(@RequestBody Map<String, Long> map) {
+        boolean result = adminService.settingAdmin(map.get("userId"));
+        return result ? BaseResponse.success() : BaseResponse.fail();
+    }
 }

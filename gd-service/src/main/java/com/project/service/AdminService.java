@@ -26,4 +26,9 @@ public interface AdminService {
      * 批量删除用户
      */
     boolean deleteUserBatch(List<Long> userIdList);
+
+    /**
+     * 设置用户为管理员
+     */
+    boolean settingAdmin(Long userId);
 }

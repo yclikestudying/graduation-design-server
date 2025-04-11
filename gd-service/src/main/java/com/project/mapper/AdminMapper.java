@@ -26,4 +26,14 @@ public interface AdminMapper {
      * 批量删除用户
      */
     boolean deleteUserBatch(@Param("userIdList") List<Long> userIdList);
+
+    /**
+     * 查询用户是否已经是管理员
+     */
+    String isAdmin(@Param("userId") Long userId);
+
+    /**
+     * 设置成管理员
+     */
+    boolean settingAdmin(Long userId);
 }

@@ -1,6 +1,7 @@
 package com.project.service.impl;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.project.constant.RoleConstant;
 import com.project.exception.BusinessExceptionHandler;
 import com.project.mapper.AdminMapper;
 import com.project.service.AdminService;
@@ -13,6 +14,7 @@ import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
 @Slf4j
@@ -88,5 +90,27 @@ public class AdminServiceImpl implements AdminService {
 
         // 执行操作
         return adminMapper.deleteUserBatch(userIdList);
+    }
+
+    /**
+     * 设置用户为管理员
+     */
+    @Override
+    public boolean settingAdmin(Long userId) {
+        // 校验参数
+        if (userId <= 0) {
+            log.error("设置用户为管理员 -----> 参数错误");
+            throw new BusinessExceptionHandler(400, "参数错误");
+        }
+
+        // 查询用户是否已经是管理员
+        String userRole = adminMapper.isAdmin(userId);
+        if (Objects.equals(userRole, RoleConstant.ROLE_ADMIN)) {
+            log.error("设置用户为管理员 -----> 当前用户已经是管理员");
+            throw new BusinessExceptionHandler(400, "当前用户已经是管理员");
+        }
+
+        // 设置成管理员
+        return adminMapper.settingAdmin(userId);
     }
 }

@@ -47,7 +47,7 @@
 
     <!--删除单个用户-->
     <update id="deleteUser">
-        update user set is_delete = 1 where id = #{userId}
+        update user set is_delete = 1 where is_delete = 0 and id = #{userId}
     </update>
 
     <!--批量删除用户-->
@@ -58,5 +58,18 @@
         <foreach collection="userIdList" item="id" open="(" separator="," close=")">
             #{id}
         </foreach>
+    </update>
+
+    <!--查询用户是否已经是管理员-->
+    <select id="isAdmin" resultType="String">
+        select user_role
+        from user
+        where is_delete = 0
+        and id = #{userId}
+    </select>
+
+    <!--设置成管理员-->
+    <update id="settingAdmin">
+        update user set user_role = 'admin' where is_delete = 0 and id = #{userId}
     </update>
 </mapper>
