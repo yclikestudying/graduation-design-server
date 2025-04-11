@@ -113,4 +113,24 @@ public class AdminServiceImpl implements AdminService {
         // 设置成管理员
         return adminMapper.settingAdmin(userId);
     }
+
+    /**
+     * 分页查询管理员
+     */
+    @Override
+    public Map<String, Object> queryAdmin(Integer current, Integer size) {
+        // 校验参数
+        if (current <= 0 || size <= 0) {
+            log.error("分页查询管理员 -----> 参数错误");
+            throw new BusinessExceptionHandler(400, "参数错误");
+        }
+
+        // 数据库查询
+        Page<UserVO> page = new Page<>(current, size);
+        Page<UserVO> userVOPage = adminMapper.queryAdmin(page);
+        Map<String, Object> map = new HashMap<>();
+        map.put("admin", userVOPage.getRecords());
+        map.put("total", userVOPage.getTotal());
+        return map;
+    }
 }

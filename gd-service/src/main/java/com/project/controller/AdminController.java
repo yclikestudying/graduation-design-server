@@ -67,4 +67,14 @@ public class AdminController {
         boolean result = adminService.settingAdmin(map.get("userId"));
         return result ? BaseResponse.success() : BaseResponse.fail();
     }
+
+    /**
+     * 分页查询管理员
+     */
+    @GetMapping("/queryAdmin")
+    @ApiOperation(value = "分页查询管理员")
+    public BaseResponse<Map<String, Object>> queryAdmin(@RequestParam("current") Integer current, @RequestParam("size") Integer size) {
+        Map<String, Object> map = adminService.queryAdmin(current, size);
+        return BaseResponse.success(map);
+    }
 }

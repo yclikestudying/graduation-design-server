@@ -72,4 +72,24 @@
     <update id="settingAdmin">
         update user set user_role = 'admin' where is_delete = 0 and id = #{userId}
     </update>
+
+    <!--分页查询管理员-->
+    <select id="queryAdmin" resultType="com.project.vo.user.UserVO">
+        select id,
+               user_name,
+               user_phone,
+               user_avatar,
+               user_gender,
+               user_birthday,
+               user_profile,
+               user_location,
+               user_hometown,
+               user_profession,
+               user_tags,
+               create_time,
+               user_role
+        from user
+        where user_role = 'admin'
+          and is_delete = 0
+    </select>
 </mapper>

@@ -31,4 +31,9 @@ public interface AdminService {
      * 设置用户为管理员
      */
     boolean settingAdmin(Long userId);
+
+    /**
+     * 分页查询管理员
+     */
+    Map<String, Object> queryAdmin(Integer current, Integer size);
 }

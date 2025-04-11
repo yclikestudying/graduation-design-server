@@ -36,4 +36,9 @@ public interface AdminMapper {
      * 设置成管理员
      */
     boolean settingAdmin(Long userId);
+
+    /**
+     * 分页查询管理员
+     */
+    Page<UserVO> queryAdmin(Page<UserVO> page);
 }
