@@ -41,4 +41,9 @@ public interface AdminMapper {
      * 分页查询管理员
      */
     Page<UserVO> queryAdmin(Page<UserVO> page);
+
+    /**
+     * 模糊查询管理员
+     */
+    Page<UserVO> queryLikeAdmin(Page<UserVO> page, @Param("keyword") String keyword);
 }

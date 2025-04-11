@@ -49,7 +49,7 @@ public class AdminServiceImpl implements AdminService {
     public Map<String, Object> queryLikeUser(String keyword, Integer current, Integer size) {
         // 校验参数
         if (current <= 0 || size <= 0 || StringUtils.isBlank(keyword)) {
-            log.error("分页查询用户 -----> 参数错误");
+            log.error("模糊查询普通用户 -----> 参数错误");
             throw new BusinessExceptionHandler(400, "参数错误");
         }
 
@@ -128,6 +128,26 @@ public class AdminServiceImpl implements AdminService {
         // 数据库查询
         Page<UserVO> page = new Page<>(current, size);
         Page<UserVO> userVOPage = adminMapper.queryAdmin(page);
+        Map<String, Object> map = new HashMap<>();
+        map.put("admin", userVOPage.getRecords());
+        map.put("total", userVOPage.getTotal());
+        return map;
+    }
+
+    /**
+     * 模糊查询管理员
+     */
+    @Override
+    public Map<String, Object> queryLikeAdmin(String keyword, Integer current, Integer size) {
+        // 校验参数
+        if (current <= 0 || size <= 0 || StringUtils.isBlank(keyword)) {
+            log.error("模糊查询管理员 -----> 参数错误");
+            throw new BusinessExceptionHandler(400, "参数错误");
+        }
+
+        // 数据库查询
+        Page<UserVO> page = new Page<>(current, size);
+        Page<UserVO> userVOPage = adminMapper.queryLikeAdmin(page, keyword);
         Map<String, Object> map = new HashMap<>();
         map.put("admin", userVOPage.getRecords());
         map.put("total", userVOPage.getTotal());

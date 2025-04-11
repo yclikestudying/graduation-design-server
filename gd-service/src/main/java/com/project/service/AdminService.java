@@ -36,4 +36,9 @@ public interface AdminService {
      * 分页查询管理员
      */
     Map<String, Object> queryAdmin(Integer current, Integer size);
+
+    /**
+     * 模糊查询管理员
+     */
+    Map<String, Object> queryLikeAdmin(String keyword, Integer current, Integer size);
 }

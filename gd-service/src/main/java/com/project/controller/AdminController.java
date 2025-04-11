@@ -77,4 +77,14 @@ public class AdminController {
         Map<String, Object> map = adminService.queryAdmin(current, size);
         return BaseResponse.success(map);
     }
+
+    /**
+     * 模糊查询管理员
+     */
+    @GetMapping("/queryLikeAdmin")
+    @ApiOperation(value = "模糊查询管理员")
+    public BaseResponse<Map<String, Object>> queryLikeAdmin(@RequestParam("keyword") String keyword, @RequestParam("current") Integer current, @RequestParam("size") Integer size) {
+        Map<String, Object> map = adminService.queryLikeAdmin(keyword, current, size);
+        return BaseResponse.success(map);
+    }
 }
