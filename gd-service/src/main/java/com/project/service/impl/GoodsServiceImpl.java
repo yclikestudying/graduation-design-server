@@ -156,6 +156,41 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods>
     }
 
     /**
+     * 批量删除物品
+     */
+    @Override
+    public boolean deleteGoodsBatch(List<Long> goodsIdList) {
+        // 参数校验
+        if (goodsIdList.isEmpty()) {
+            log.error("批量删除物品 -----> 参数错误");
+            throw new BusinessExceptionHandler(400, "参数错误");
+        }
+
+        // 执行操作
+        return goodsMapper.deleteBatchIds(goodsIdList) > 0;
+    }
+
+    /**
+     * 按时间搜索发布物品
+     */
+    @Override
+    public Map<String, Object> queryGoodsByTime(String time, Integer current, Integer size) {
+        // 校验参数
+        if (StringUtils.isBlank(time)) {
+            log.error("按时间搜索发布物品 -----> 参数错误");
+            throw new BusinessExceptionHandler(400, "参数错误");
+        }
+
+        // 数据库查询
+        Page<QueryGoodsVO> page = new Page<>(current, size);
+        Page<QueryGoodsVO> queryArticleVOPage = goodsMapper.queryGoodsByTime(page, time);
+        Map<String, Object> map = new HashMap<>();
+        map.put("goods", queryArticleVOPage.getRecords());
+        map.put("total", queryArticleVOPage.getTotal());
+        return map;
+    }
+
+    /**
      * 校验是根据自己的id还是其他人的id进行操作
      */
     private Long checkUserId(Long userId) {

@@ -149,7 +149,6 @@ public class ArticleController {
     @PutMapping("/deleteArticleBatch")
     @ApiOperation(value = "批量删除动态")
     public BaseResponse<String> deleteArticleBatch(@RequestBody List<Long> articleIdList){
-        System.out.println(articleIdList);
         boolean result = articleService.deleteArticleBatch(articleIdList);
         return result ? BaseResponse.success() : BaseResponse.fail();
     }

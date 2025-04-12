@@ -83,4 +83,24 @@ public class GoodsController {
         Map<String, Object> map = goodsService.queryGoodsByPage(current, size);
         return BaseResponse.success(map);
     }
+
+    /**
+     * 批量删除物品
+     */
+    @PutMapping("/deleteGoodsBatch")
+    @ApiOperation(value = "批量删除物品")
+    public BaseResponse<String> deleteGoodsBatch(@RequestBody List<Long> goodsIdList){
+        boolean result = goodsService.deleteGoodsBatch(goodsIdList);
+        return result ? BaseResponse.success() : BaseResponse.fail();
+    }
+
+    /**
+     * 按时间搜索发布物品
+     */
+    @GetMapping("/queryGoodsByTime")
+    @ApiOperation(value = "按时间搜索发布物品")
+    public BaseResponse<Map<String, Object>> queryGoodsByTime(@RequestParam("time") String time, @RequestParam("current") Integer current, @RequestParam("size") Integer size) {
+        Map<String, Object> map = goodsService.queryGoodsByTime(time, current, size);
+        return BaseResponse.success(map);
+    }
 }

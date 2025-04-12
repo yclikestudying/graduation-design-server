@@ -39,4 +39,14 @@ public interface GoodsService extends IService<Goods> {
      * 分页查询物品
      */
     Map<String, Object> queryGoodsByPage(Integer current, Integer size);
+
+    /**
+     * 批量删除物品
+     */
+    boolean deleteGoodsBatch(List<Long> goodsIdList);
+
+    /**
+     * 按时间搜索发布物品
+     */
+    Map<String, Object> queryGoodsByTime(String time, Integer current, Integer size);
 }

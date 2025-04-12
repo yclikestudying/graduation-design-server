@@ -23,4 +23,9 @@ public interface GoodsMapper extends BaseMapper<Goods> {
      * 分页查询物品
      */
     Page<QueryGoodsVO> queryGoodsByPage(Page<QueryGoodsVO> page);
+
+    /**
+     * 按时间搜索发布物品
+     */
+    Page<QueryGoodsVO> queryGoodsByTime(Page<QueryGoodsVO> page, @Param("time")String time);
 }
