@@ -1,5 +1,6 @@
 package com.project.service.impl;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.project.domain.Goods;
 import com.project.exception.BusinessExceptionHandler;
@@ -16,7 +17,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Slf4j
@@ -130,6 +133,26 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods>
             throw new BusinessExceptionHandler(400, "商品不存在");
         }
         return result > 0;
+    }
+
+    /**
+     * 分页查询物品
+     */
+    @Override
+    public Map<String, Object> queryGoodsByPage(Integer current, Integer size) {
+        // 校验参数
+        if (current <= 0 || size <= 0) {
+            log.error("分页查询物品 -----> 分页参数错误");
+            throw new BusinessExceptionHandler(400, "参数错误");
+        }
+
+        // 进行查询
+        Page<QueryGoodsVO> page = new Page<>(current, size);
+        Page<QueryGoodsVO> queryGoodsVOPage = goodsMapper.queryGoodsByPage(page);
+        Map<String, Object> map = new HashMap<>();
+        map.put("goods", queryGoodsVOPage.getRecords());
+        map.put("total", queryGoodsVOPage.getTotal());
+        return map;
     }
 
     /**

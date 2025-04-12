@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/goods")
@@ -71,5 +72,15 @@ public class GoodsController {
     public BaseResponse<String> deleteGoods(@RequestParam("goodsId") Long goodsId) {
         boolean result = goodsService.deleteGoods(goodsId);
         return result ? BaseResponse.success() : BaseResponse.fail();
+    }
+
+    /**
+     * 分页查询物品
+     */
+    @GetMapping("/queryGoodsByPage")
+    @ApiOperation(value = "分页查询物品")
+    public BaseResponse<Map<String, Object>> queryGoodsByPage(@RequestParam("current") Integer current, @RequestParam("size") Integer size) {
+        Map<String, Object> map = goodsService.queryGoodsByPage(current, size);
+        return BaseResponse.success(map);
     }
 }

@@ -7,6 +7,7 @@ import com.project.vo.goods.QueryGoodsVO;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 public interface GoodsService extends IService<Goods> {
     /**
@@ -33,4 +34,9 @@ public interface GoodsService extends IService<Goods> {
      * 根据id删除商品
      */
     boolean deleteGoods(Long goodsId);
+
+    /**
+     * 分页查询物品
+     */
+    Map<String, Object> queryGoodsByPage(Integer current, Integer size);
 }
