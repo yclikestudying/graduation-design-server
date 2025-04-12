@@ -2,6 +2,7 @@ package com.project.controller;
 
 import com.project.common.BaseResponse;
 import com.project.service.AdminService;
+import com.project.vo.article.QueryArticleVO;
 import com.project.vo.user.UserVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -85,6 +86,26 @@ public class AdminController {
     @ApiOperation(value = "模糊查询管理员")
     public BaseResponse<Map<String, Object>> queryLikeAdmin(@RequestParam("keyword") String keyword, @RequestParam("current") Integer current, @RequestParam("size") Integer size) {
         Map<String, Object> map = adminService.queryLikeAdmin(keyword, current, size);
+        return BaseResponse.success(map);
+    }
+
+    /**
+     * 设置管理员为普通用户
+     */
+    @PostMapping("/settingUser")
+    @ApiOperation(value = "设置管理员为普通用户")
+    public BaseResponse<String> settingUser(@RequestBody Map<String, Long> map) {
+        boolean result = adminService.settingUser(map.get("userId"));
+        return result ? BaseResponse.success() : BaseResponse.fail();
+    }
+
+    /**
+     * 分页查询动态
+     */
+    @GetMapping("/queryArticle")
+    @ApiOperation(value = "分页查询动态")
+    public BaseResponse<Map<String, Object>> queryArticle(@RequestParam("current") Integer current, @RequestParam("size") Integer size) {
+        Map<String, Object> map = adminService.queryArticle(current, size);
         return BaseResponse.success(map);
     }
 }

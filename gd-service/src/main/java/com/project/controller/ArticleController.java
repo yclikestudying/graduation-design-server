@@ -142,4 +142,25 @@ public class ArticleController {
         List<QueryArticleVO> list = articleService.queryArticleByKeyword(keyword);
         return BaseResponse.success(list);
     }
+
+    /**
+     * 批量删除动态
+     */
+    @PutMapping("/deleteArticleBatch")
+    @ApiOperation(value = "批量删除动态")
+    public BaseResponse<String> deleteArticleBatch(@RequestBody List<Long> articleIdList){
+        System.out.println(articleIdList);
+        boolean result = articleService.deleteArticleBatch(articleIdList);
+        return result ? BaseResponse.success() : BaseResponse.fail();
+    }
+
+    /**
+     * 按时间搜索发布动态
+     */
+    @GetMapping("/queryArticleByTime")
+    @ApiOperation(value = "按时间搜索发布动态")
+    public BaseResponse<Map<String, Object>> queryArticleByTime(@RequestParam("time") String time, @RequestParam("current") Integer current, @RequestParam("size") Integer size) {
+        Map<String, Object> map = articleService.queryArticleByTime(time, current, size);
+        return BaseResponse.success(map);
+    }
 }

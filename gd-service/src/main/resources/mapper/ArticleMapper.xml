@@ -19,6 +19,7 @@
           and a.user_id = #{userId}
         order by a.create_time desc
     </select>
+
     <!--指定id查询动态信息-->
     <select id="queryOne" parameterType="Long" resultType="com.project.vo.article.QueryArticleVO">
         select u.user_name,
@@ -34,6 +35,7 @@
           and a.is_delete = 0
           and a.id = #{articleId}
     </select>
+
     <!--查询校园动态-->
     <select id="queryArticleOfSchool" resultType="com.project.vo.article.QueryArticleVO">
         select u.user_name,
@@ -49,6 +51,7 @@
           and a.is_delete = 0
         order by a.create_time desc
     </select>
+
     <!--查询关注用户id-->
     <select id="queryFriendIds" parameterType="Long" resultType="Long">
         select followee_id
@@ -56,6 +59,7 @@
         where is_delete = 0
           and follower_id = #{userId}
     </select>
+
     <!--指定关注用户动态信息-->
     <select id="queryArticleOfAttention" parameterType="Long" resultType="com.project.vo.article.QueryArticleVO">
         select u.user_name,
@@ -75,6 +79,7 @@
         </foreach>
         order by a.create_time desc
     </select>
+
     <!--关键字模糊查询动态-->
     <select id="queryArticleByKeyword" parameterType="String" resultType="com.project.vo.article.QueryArticleVO">
         select u.user_name,
@@ -89,6 +94,42 @@
         where u.is_delete = 0
           and a.is_delete = 0
           and a.article_content like concat('%', #{keyword}, '%')
+        order by a.create_time desc
+    </select>
+
+    <!--分页查询动态-->
+    <select id="queryArticleByPage" resultType="com.project.vo.article.QueryArticleVO">
+        select u.user_name,
+               u.user_avatar,
+               a.id,
+               a.user_id,
+               a.article_content,
+               a.article_photos,
+               a.create_time
+        from user u
+                 join article a on u.id = a.user_id
+        where u.is_delete = 0
+          and a.is_delete = 0
+        order by a.create_time desc
+    </select>
+
+    <!--按时间查询动态-->
+    <select id="queryArticleByTime" resultType="com.project.vo.article.QueryArticleVO">
+        select u.user_name,
+               u.user_avatar,
+               a.id,
+               a.user_id,
+               a.article_content,
+               a.article_photos,
+               a.create_time
+        from user u
+                 join article a on u.id = a.user_id
+        where u.is_delete = 0
+            and a.is_delete = 0
+            and year (
+            a.create_time) = year (#{time})
+          and month (a.create_time) = month (#{time})
+          and day (a.create_time) = day (#{time})
         order by a.create_time desc
     </select>
 </mapper>

@@ -1,6 +1,7 @@
 package com.project.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.gson.Gson;
 import com.project.domain.Article;
@@ -21,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -276,6 +278,41 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
             }).collect(Collectors.toList());
         }
         return null;
+    }
+
+    /**
+     * 批量删除动态
+     */
+    @Override
+    public boolean deleteArticleBatch(List<Long> articleIdList) {
+        // 参数校验
+        if (articleIdList.isEmpty()) {
+            log.error("批量删除动态 -----> 参数错误");
+            throw new BusinessExceptionHandler(400, "参数错误");
+        }
+
+        // 执行操作
+        return articleMapper.deleteBatchIds(articleIdList) > 0;
+    }
+
+    /**
+     * 按时间搜索发布动态
+     */
+    @Override
+    public Map<String, Object> queryArticleByTime(String time, Integer current, Integer size) {
+        // 校验参数
+        if (StringUtils.isBlank(time)) {
+            log.error("按时间搜索发布动态 -----> 参数错误");
+            throw new BusinessExceptionHandler(400, "参数错误");
+        }
+
+        // 数据库查询
+        Page<QueryArticleVO> page = new Page<>(current, size);
+        Page<QueryArticleVO> queryArticleVOPage = articleMapper.queryArticleByTime(page, time);
+        Map<String, Object> map = new HashMap<>();
+        map.put("article", queryArticleVOPage.getRecords());
+        map.put("total", queryArticleVOPage.getTotal());
+        return map;
     }
 
     /**

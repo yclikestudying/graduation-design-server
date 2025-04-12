@@ -50,4 +50,14 @@ public interface ArticleService extends IService<Article> {
      * 关键字模糊查询动态
      */
     List<QueryArticleVO> queryArticleByKeyword(String keyword);
+
+    /**
+     * 批量删除动态
+     */
+    boolean deleteArticleBatch(List<Long> articleIdList);
+
+    /**
+     * 按时间搜索发布动态
+     */
+    Map<String, Object> queryArticleByTime(String time, Integer current, Integer size);
 }

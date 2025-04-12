@@ -28,9 +28,9 @@ public interface AdminMapper {
     boolean deleteUserBatch(@Param("userIdList") List<Long> userIdList);
 
     /**
-     * 查询用户是否已经是管理员
+     * 查询用户权限
      */
-    String isAdmin(@Param("userId") Long userId);
+    String getUserRole(@Param("userId") Long userId);
 
     /**
      * 设置成管理员
@@ -46,4 +46,9 @@ public interface AdminMapper {
      * 模糊查询管理员
      */
     Page<UserVO> queryLikeAdmin(Page<UserVO> page, @Param("keyword") String keyword);
+
+    /**
+     * 设置成普通用户
+     */
+    boolean settingUser(@Param("userId") Long userId);
 }

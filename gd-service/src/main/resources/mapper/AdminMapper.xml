@@ -60,8 +60,8 @@
         </foreach>
     </update>
 
-    <!--查询用户是否已经是管理员-->
-    <select id="isAdmin" resultType="String">
+    <!--查询用户权限-->
+    <select id="getUserRole" resultType="String">
         select user_role
         from user
         where is_delete = 0
@@ -115,4 +115,8 @@
           and (user_name like CONCAT('%', #{keyword}, '%') or user_phone like CONCAT('%', #{keyword}, '%'))
     </select>
 
+    <!--设置成普通用户-->
+    <update id="settingUser">
+        update user set user_role = 'user' where is_delete = 0 and id = #{userId}
+    </update>
 </mapper>
