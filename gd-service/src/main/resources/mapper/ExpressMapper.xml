@@ -23,4 +23,38 @@
         </if>
         order by e.create_time desc
     </select>
+
+    <!--分页查询跑腿服务-->
+    <select id="queryExpressByPage" resultType="com.project.vo.express.QueryExpressVO">
+        select u.user_name,
+               u.user_avatar,
+               e.id,
+               e.user_id,
+               e.express_content,
+               e.create_time
+        from user u
+                 join express e on u.id = e.user_id
+        where u.is_delete = 0
+          and e.is_delete = 0
+        order by e.create_time desc
+    </select>
+
+    <!--按时间搜索跑腿服务-->
+    <select id="queryExpressByTime" resultType="com.project.vo.express.QueryExpressVO">
+        select u.user_name,
+               u.user_avatar,
+               e.id,
+               e.user_id,
+               e.express_content,
+               e.create_time
+        from user u
+                 join express e on u.id = e.user_id
+        where u.is_delete = 0
+            and e.is_delete = 0
+            and year (
+            e.create_time) = year (#{time})
+          and month (e.create_time) = month (#{time})
+          and day (e.create_time) = day (#{time})
+        order by e.create_time desc
+    </select>
 </mapper>

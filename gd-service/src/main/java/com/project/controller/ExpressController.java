@@ -68,4 +68,34 @@ public class ExpressController {
         List<QueryExpressVO> list = expressService.queryExpressByKeyword(keyword);
         return BaseResponse.success(list);
     }
+
+    /**
+     * 分页查询跑腿服务
+     */
+    @GetMapping("/queryExpressByPage")
+    @ApiOperation(value = "分页查询跑腿服务")
+    public BaseResponse<Map<String, Object>> queryExpressByPage(@RequestParam("current") Integer current, @RequestParam("size") Integer size) {
+        Map<String, Object> map = expressService.queryExpressByPage(current, size);
+        return BaseResponse.success(map);
+    }
+
+    /**
+     * 批量删除跑腿服务
+     */
+    @PutMapping("/deleteExpressBatch")
+    @ApiOperation(value = "批量删除跑腿服务")
+    public BaseResponse<String> deleteExpressBatch(@RequestBody List<Long> expressIdList){
+        boolean result = expressService.deleteExpressBatch(expressIdList);
+        return result ? BaseResponse.success() : BaseResponse.fail();
+    }
+
+    /**
+     * 按时间搜索跑腿服务
+     */
+    @GetMapping("/queryExpressByTime")
+    @ApiOperation(value = "按时间搜索跑腿服务")
+    public BaseResponse<Map<String, Object>> queryExpressByTime(@RequestParam("time") String time, @RequestParam("current") Integer current, @RequestParam("size") Integer size) {
+        Map<String, Object> map = expressService.queryExpressByTime(time, current, size);
+        return BaseResponse.success(map);
+    }
 }
