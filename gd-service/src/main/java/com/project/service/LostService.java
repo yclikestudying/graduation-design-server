@@ -7,6 +7,7 @@ import com.project.vo.lost.QueryLostVO;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 public interface LostService extends IService<Lost> {
     /**
@@ -38,4 +39,19 @@ public interface LostService extends IService<Lost> {
      * 根据id删除寻物启事
      */
     boolean deleteLost(Long lostId);
+
+    /**
+     * 分页查询寻物启事
+     */
+    Map<String, Object> queryLostByPage(Integer current, Integer size);
+
+    /**
+     * 批量删除寻物启事
+     */
+    boolean deleteLostBatch(List<Long> lostIdList);
+
+    /**
+     * 按时间搜索寻物启事
+     */
+    Map<String, Object> queryLostByTime(String time, Integer current, Integer size);
 }

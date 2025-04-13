@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/lost")
@@ -81,5 +82,35 @@ public class LostController {
     public BaseResponse<String> deleteLost(@RequestParam("lostId") Long lostId) {
         boolean result = lostService.deleteLost(lostId);
         return result ? BaseResponse.success() : BaseResponse.fail();
+    }
+
+    /**
+     * 分页查询寻物启事
+     */
+    @GetMapping("/queryLostByPage")
+    @ApiOperation(value = "分页查询寻物启事")
+    public BaseResponse<Map<String, Object>> queryLostByPage(@RequestParam("current") Integer current, @RequestParam("size") Integer size) {
+        Map<String, Object> map = lostService.queryLostByPage(current, size);
+        return BaseResponse.success(map);
+    }
+
+    /**
+     * 批量删除寻物启事
+     */
+    @PutMapping("/deleteLostBatch")
+    @ApiOperation(value = "批量删除寻物启事")
+    public BaseResponse<String> deleteLostBatch(@RequestBody List<Long> lostIdList){
+        boolean result = lostService.deleteLostBatch(lostIdList);
+        return result ? BaseResponse.success() : BaseResponse.fail();
+    }
+
+    /**
+     * 按时间搜索寻物启事
+     */
+    @GetMapping("/queryLostByTime")
+    @ApiOperation(value = "按时间搜索寻物启事")
+    public BaseResponse<Map<String, Object>> queryLostByTime(@RequestParam("time") String time, @RequestParam("current") Integer current, @RequestParam("size") Integer size) {
+        Map<String, Object> map = lostService.queryLostByTime(time, current, size);
+        return BaseResponse.success(map);
     }
 }

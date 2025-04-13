@@ -1,5 +1,6 @@
 package com.project.service.impl;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.project.domain.Goods;
 import com.project.domain.Lost;
@@ -9,6 +10,7 @@ import com.project.mapper.LostMapper;
 import com.project.service.LostService;
 import com.project.utils.Upload;
 import com.project.utils.UserContext;
+import com.project.vo.goods.QueryGoodsVO;
 import com.project.vo.lost.QueryLostVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -17,7 +19,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Slf4j
@@ -161,6 +165,61 @@ public class LostServiceImpl extends ServiceImpl<LostMapper, Lost>
             throw new BusinessExceptionHandler(400, "不存在");
         }
         return result > 0;
+    }
+
+    /**
+     * 分页查询寻物启事
+     */
+    @Override
+    public Map<String, Object> queryLostByPage(Integer current, Integer size) {
+        // 校验参数
+        if (current <= 0 || size <= 0) {
+            log.error("分页查询寻物启事 -----> 分页参数错误");
+            throw new BusinessExceptionHandler(400, "参数错误");
+        }
+
+        // 进行查询
+        Page<QueryLostVO> page = new Page<>(current, size);
+        Page<QueryLostVO> queryGoodsVOPage = lostMapper.queryLostByPage(page);
+        Map<String, Object> map = new HashMap<>();
+        map.put("lost", queryGoodsVOPage.getRecords());
+        map.put("total", queryGoodsVOPage.getTotal());
+        return map;
+    }
+
+    /**
+     * 批量删除寻物启事
+     */
+    @Override
+    public boolean deleteLostBatch(List<Long> lostIdList) {
+        // 参数校验
+        if (lostIdList.isEmpty()) {
+            log.error("批量删除寻物启事 -----> 参数错误");
+            throw new BusinessExceptionHandler(400, "参数错误");
+        }
+
+        // 执行操作
+        return lostMapper.deleteBatchIds(lostIdList) > 0;
+    }
+
+    /**
+     * 按时间搜索寻物启事
+     */
+    @Override
+    public Map<String, Object> queryLostByTime(String time, Integer current, Integer size) {
+        // 校验参数
+        if (StringUtils.isBlank(time)) {
+            log.error("按时间搜索寻物启事 -----> 参数错误");
+            throw new BusinessExceptionHandler(400, "参数错误");
+        }
+
+        // 数据库查询
+        Page<QueryLostVO> page = new Page<>(current, size);
+        Page<QueryLostVO> queryArticleVOPage = lostMapper.queryGoodsByTime(page, time);
+        Map<String, Object> map = new HashMap<>();
+        map.put("lost", queryArticleVOPage.getRecords());
+        map.put("total", queryArticleVOPage.getTotal());
+        return map;
     }
 
     /**
