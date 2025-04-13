@@ -176,7 +176,7 @@ public class GoodsServiceImpl extends ServiceImpl<GoodsMapper, Goods>
     @Override
     public Map<String, Object> queryGoodsByTime(String time, Integer current, Integer size) {
         // 校验参数
-        if (StringUtils.isBlank(time)) {
+        if (StringUtils.isBlank(time ) || current <= 0 || size <= 0) {
             log.error("按时间搜索发布物品 -----> 参数错误");
             throw new BusinessExceptionHandler(400, "参数错误");
         }

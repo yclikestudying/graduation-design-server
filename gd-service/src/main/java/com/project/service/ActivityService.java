@@ -8,6 +8,7 @@ import com.project.vo.activityRelation.ActivityRelationVO;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ActivityService extends IService<Activity> {
     /**
@@ -53,4 +54,19 @@ public interface ActivityService extends IService<Activity> {
      * 查询用户所参见的活动（包括自己创建的）
      */
     List<QueryActivityVO> queryJoinedActivity();
+
+    /**
+     * 分页查询群聊
+     */
+    Map<String, Object> queryGroupChatByPage(Integer current, Integer size);
+
+    /**
+     * 批量删除群聊
+     */
+    boolean deleteActivityBatch(List<Long> activityIdList);
+
+    /**
+     * 按时间搜索群聊
+     */
+    Map<String, Object> queryActivityByTime(String time, Integer current, Integer size);
 }

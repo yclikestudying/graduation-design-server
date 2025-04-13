@@ -17,12 +17,12 @@ public class QueryActivityVO implements Serializable {
     private Long id;
 
     /**
-     * 活动名称
+     * 群聊名称
      */
     private String activityName;
 
     /**
-     * 活动描述
+     * 群聊描述
      */
     private String activityDescription;
 
@@ -32,12 +32,12 @@ public class QueryActivityVO implements Serializable {
     private Integer activityMaxPeople;
 
     /**
-     * 活动当前人数
+     * 群聊当前人数
      */
     private Integer currentPeople;
 
     /**
-     * 活动图片
+     * 群聊图片
      */
     private String activityPhoto;
 

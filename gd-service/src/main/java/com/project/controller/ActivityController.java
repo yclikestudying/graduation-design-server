@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/activity")
@@ -102,5 +103,35 @@ public class ActivityController {
     public BaseResponse<ActivityRelationVO> queryNameAndCount(@PathVariable("activityId") Long activityId) {
         ActivityRelationVO activityRelationVO = activityService.queryNameAndCount(activityId);
         return BaseResponse.success(activityRelationVO);
+    }
+
+    /**
+     * 分页查询群聊
+     */
+    @GetMapping("/queryGroupChatByPage")
+    @ApiOperation(value = "分页查询群聊")
+    public BaseResponse<Map<String, Object>> queryGroupChatByPage(@RequestParam("current") Integer current, @RequestParam("size") Integer size) {
+        Map<String, Object> map = activityService.queryGroupChatByPage(current, size);
+        return BaseResponse.success(map);
+    }
+
+    /**
+     * 批量删除群聊
+     */
+    @PutMapping("/deleteActivityBatch")
+    @ApiOperation(value = "批量删除群聊")
+    public BaseResponse<String> deleteActivityBatch(@RequestBody List<Long> activityIdList){
+        boolean result = activityService.deleteActivityBatch(activityIdList);
+        return result ? BaseResponse.success() : BaseResponse.fail();
+    }
+
+    /**
+     * 按时间搜索群聊
+     */
+    @GetMapping("/queryActivityByTime")
+    @ApiOperation(value = "按时间搜索群聊")
+    public BaseResponse<Map<String, Object>> queryActivityByTime(@RequestParam("time") String time, @RequestParam("current") Integer current, @RequestParam("size") Integer size) {
+        Map<String, Object> map = activityService.queryActivityByTime(time, current, size);
+        return BaseResponse.success(map);
     }
 }

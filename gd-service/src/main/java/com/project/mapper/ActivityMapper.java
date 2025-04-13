@@ -1,6 +1,7 @@
 package com.project.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.project.domain.Activity;
 import com.project.vo.activity.QueryActivityVO;
 import com.project.vo.activity.QueryOneActivityVO;
@@ -29,4 +30,14 @@ public interface ActivityMapper extends BaseMapper<Activity> {
      * 查询我所参见的活动
      */
     List<QueryActivityVO> queryJoinedActivity(@Param("userId") Long userId);
+
+    /**
+     * 分页查询群聊
+     */
+    Page<QueryActivityVO> queryGroupChatByPage(Page<QueryActivityVO> page);
+
+    /**
+     * 按时间搜索群聊
+     */
+    Page<QueryActivityVO> queryActivityByTime(Page<QueryActivityVO> page, @Param("time") String time);
 }

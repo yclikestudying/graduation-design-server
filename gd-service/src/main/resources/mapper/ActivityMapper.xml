@@ -3,7 +3,6 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.project.mapper.ActivityMapper">
-
     <!--查询活动-->
     <select id="queryActivity" resultType="com.project.vo.activity.QueryActivityVO">
         select id,
@@ -70,6 +69,38 @@
                      from activity_relation
                      where is_delete = 0
                        and user_id = #{userId})
+        order by create_time desc
+    </select>
+
+    <!--分页查询群聊-->
+    <select id="queryGroupChatByPage" resultType="com.project.vo.activity.QueryActivityVO">
+        select id,
+               user_id,
+               activity_name,
+               activity_description,
+               activity_max_people,
+               activity_photo,
+               create_time
+        from activity
+        where is_delete = 0
+        order by create_time desc
+    </select>
+
+    <!--按时间分页查询群聊-->
+    <select id="queryActivityByTime" resultType="com.project.vo.activity.QueryActivityVO">
+        select id,
+               user_id,
+               activity_name,
+               activity_description,
+               activity_max_people,
+               activity_photo,
+               create_time
+        from activity
+        where is_delete = 0
+            and year (
+            create_time) = year (#{time})
+          and month (create_time) = month (#{time})
+          and day (create_time) = day (#{time})
         order by create_time desc
     </select>
 </mapper>

@@ -1,6 +1,7 @@
 package com.project.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.project.domain.Activity;
 import com.project.domain.Lost;
@@ -13,6 +14,7 @@ import com.project.utils.UserContext;
 import com.project.vo.activity.QueryActivityVO;
 import com.project.vo.activity.QueryOneActivityVO;
 import com.project.vo.activityRelation.ActivityRelationVO;
+import com.project.vo.goods.QueryGoodsVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -23,7 +25,9 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -189,6 +193,69 @@ public class ActivityServiceImpl extends ServiceImpl<ActivityMapper, Activity>
             Integer count = activityRelationService.queryCount(queryActivityVO.getId());
             queryActivityVO.setCurrentPeople(count);
         }).collect(Collectors.toList());
+    }
+
+    /**
+     * 分页查询群聊
+     */
+    @Override
+    public Map<String, Object> queryGroupChatByPage(Integer current, Integer size) {
+        // 校验参数
+        if (current <= 0 || size <= 0) {
+            log.error("分页查询群聊 -----> 分页参数错误");
+            throw new BusinessExceptionHandler(400, "参数错误");
+        }
+
+        // 进行查询
+        Page<QueryActivityVO> page = new Page<>(current, size);
+        Page<QueryActivityVO> queryActivityVOPage = activityMapper.queryGroupChatByPage(page);
+        List<QueryActivityVO> records = queryActivityVOPage.getRecords().stream().peek(queryActivityVO -> {
+            Integer count = activityRelationService.queryCount(queryActivityVO.getId());
+            queryActivityVO.setCurrentPeople(count);
+        }).collect(Collectors.toList());
+        Map<String, Object> map = new HashMap<>();
+        map.put("groupChat", records);
+        map.put("total", queryActivityVOPage.getTotal());
+        return map;
+    }
+
+    /**
+     * 批量删除群聊
+     */
+    @Override
+    public boolean deleteActivityBatch(List<Long> activityIdList) {
+        // 参数校验
+        if (activityIdList.isEmpty()) {
+            log.error("批量删除群聊 -----> 参数错误");
+            throw new BusinessExceptionHandler(400, "参数错误");
+        }
+
+        // 执行操作
+        return activityMapper.deleteBatchIds(activityIdList) > 0;
+    }
+
+    /**
+     * 按时间搜索群聊
+     */
+    @Override
+    public Map<String, Object> queryActivityByTime(String time, Integer current, Integer size) {
+        // 校验参数
+        if (StringUtils.isBlank(time ) || current <= 0 || size <= 0) {
+            log.error("按时间搜索群聊 -----> 分页参数错误");
+            throw new BusinessExceptionHandler(400, "参数错误");
+        }
+
+        // 进行查询
+        Page<QueryActivityVO> page = new Page<>(current, size);
+        Page<QueryActivityVO> queryActivityVOPage = activityMapper.queryActivityByTime(page, time);
+        List<QueryActivityVO> records = queryActivityVOPage.getRecords().stream().peek(queryActivityVO -> {
+            Integer count = activityRelationService.queryCount(queryActivityVO.getId());
+            queryActivityVO.setCurrentPeople(count);
+        }).collect(Collectors.toList());
+        Map<String, Object> map = new HashMap<>();
+        map.put("groupChat", records);
+        map.put("total", queryActivityVOPage.getTotal());
+        return map;
     }
 
     /**
