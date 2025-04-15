@@ -47,19 +47,4 @@ public interface UserMapper extends BaseMapper<User> {
      * 查询互关用户id
      */
     List<Long> queryEach(@Param("userId") Long userId);
-
-    /**
-     * 删除之前的访客记录
-     */
-    boolean deleteVisit(@Param("visitorId") Long visitorId, @Param("visitedId") Long visitedId);
-
-    /**
-     * 添加访客记录
-     */
-    boolean addVisit(@Param("visitorId") Long visitorId, @Param("visitedId") Long visitedId);
-
-    /**
-     * 查询我的访客记录
-     */
-    List<QueryVisitVO> queryVisit(@Param("userid") Long userId);
 }

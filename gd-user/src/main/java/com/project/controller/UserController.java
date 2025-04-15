@@ -134,8 +134,9 @@ public class UserController {
 
     /**
      * 上传头像
+     *
      * @param userId 用户id
-     * @param file 文件数据
+     * @param file   文件数据
      */
     @PostMapping("/uploadAvatar")
     @ApiOperation(value = "上传头像")
@@ -147,6 +148,7 @@ public class UserController {
 
     /**
      * 查询关注用户
+     *
      * @param userId 用户id
      */
     @GetMapping("/queryFriend")
@@ -158,6 +160,7 @@ public class UserController {
 
     /**
      * 查询粉丝用户
+     *
      * @param userId 用户id
      */
     @GetMapping("/queryFans")
@@ -169,32 +172,13 @@ public class UserController {
 
     /**
      * 查询互关用户
+     *
      * @param userId 用户id
      */
     @GetMapping("/queryEach")
     @ApiOperation(value = "查询互关用户")
     public BaseResponse<List<QueryUserVO>> queryEach(@RequestParam(value = "userId", required = false) Long userId) {
         List<QueryUserVO> list = userService.queryEach(userId);
-        return BaseResponse.success(list);
-    }
-
-    /**
-     * 添加访客记录
-     */
-    @PostMapping("/addVisit")
-    @ApiOperation(value = "添加访客记录")
-    public BaseResponse<String> addVisit(@RequestBody Map<String, Long> map) {
-        boolean result = userService.addVisit(map.get("visitorId"), map.get("visitedId"));
-        return result ? BaseResponse.success() : BaseResponse.fail();
-    }
-
-    /**
-     * 查询访客记录
-     */
-    @GetMapping("/queryVisit")
-    @ApiOperation(value = "查询访客记录")
-    public BaseResponse<List<QueryVisitVO>> queryVisit() {
-        List<QueryVisitVO> list = userService.queryVisit();
         return BaseResponse.success(list);
     }
 }

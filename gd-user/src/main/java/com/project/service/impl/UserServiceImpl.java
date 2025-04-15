@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import com.project.common.CodeEnum;
 import com.project.constant.RedisConstant;
 import com.project.constant.RoleConstant;
+import com.project.controller.UserController;
 import com.project.domain.User;
 import com.project.domain.Visitor;
 import com.project.dto.user.UserLoginRequest;
@@ -451,46 +452,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             list.add(queryUserVO);
         });
         return list;
-    }
-
-    /**
-     * 添加访客记录
-     */
-    @Override
-    public boolean addVisit(Long visitorId, Long visitedId) {
-        // 校验参数
-        if (visitorId <= 0 || visitedId <= 0) {
-            log.error("添加访客记录 -----> 参数错误");
-            throw new BusinessExceptionHandler(400, "参数错误");
-        }
-        // 删除之前的访客记录
-        userMapper.deleteVisit(visitorId, visitedId);
-        // 保存至数据库
-        Visitor visitor = new Visitor();
-        visitor.setVisitorId(visitorId);
-        visitor.setVisitedId(visitedId);
-        try {
-            return userMapper.addVisit(visitorId, visitedId);
-        } catch (Exception e) {
-            log.error("添加访客记录 -----> 数据库插入失败");
-            throw new RuntimeException(e);
-        }
-    }
-
-    /**
-     * 查询访客记录
-     */
-    @Override
-    public List<QueryVisitVO> queryVisit() {
-        // 获取我的id
-        Long userId = UserContext.getUserId();
-        // 查询我的访客记录
-        try {
-            return userMapper.queryVisit(userId);
-        } catch (Exception e) {
-            log.error("查询访客记录 -----> 数据库查询失败");
-            throw new RuntimeException(e);
-        }
     }
 
     /**

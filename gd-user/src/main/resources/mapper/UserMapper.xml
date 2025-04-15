@@ -82,32 +82,4 @@
           and f2.is_delete = 0
           and f1.follower_id = #{userId}
     </select>
-
-    <!--删除之前的访客记录-->
-    <delete id="deleteVisit">
-        delete
-        from visitor
-        where visitor_id = #{visitorId}
-          and visited_id = #{visitedId}
-    </delete>
-
-    <!--添加访客记录-->
-    <insert id="addVisit">
-        insert into visitor(visitor_id, visited_id)
-        values (#{visitorId}, #{visitedId})
-    </insert>
-
-    <!--查询我的访客记录-->
-    <select id="queryVisit" resultType="com.project.vo.visit.QueryVisitVO">
-        select u.id,
-               u.user_avatar,
-               u.user_name,
-               u.user_profile,
-               v.visit_time
-        from user u
-                 join visitor v on u.id = v.visitor_id
-            and u.is_delete = 0
-            and v.is_delete = 0
-            and v.visited_id = #{userid}
-    </select>
 </mapper>

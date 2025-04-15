@@ -82,14 +82,4 @@ public interface UserService extends IService<User> {
      * @param userId 用户id
      */
     List<QueryUserVO> queryEach(Long userId);
-
-    /**
-     * 添加访客记录
-     */
-    boolean addVisit(Long visitorId, Long visitedId);
-
-    /**
-     * 查询访客记录
-     */
-    List<QueryVisitVO> queryVisit();
 }

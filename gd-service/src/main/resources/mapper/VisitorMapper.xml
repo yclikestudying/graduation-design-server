@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.mapper.VisitorMapper">
+   <!--查询访客记录-->
+    <select id="queryVisitor" resultType="com.project.vo.visit.QueryVisitVO">
+        select u.id,
+               u.user_avatar,
+               u.user_name,
+               u.user_profile,
+               v.visit_time
+        from user u
+                 join visitor v on u.id = v.visitor_id
+            and u.is_delete = 0
+            and v.is_delete = 0
+            and v.visited_id = #{userId}
+        order by v.visit_time
+    </select>
+</mapper>
