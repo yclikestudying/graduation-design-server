@@ -2,6 +2,7 @@ package com.project.controller;
 
 import com.project.common.BaseResponse;
 import com.project.service.GroupMessageService;
+import com.project.vo.message.QueryGroupChatLatestMessageVO;
 import com.project.vo.message.QueryGroupMessageVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -27,6 +28,16 @@ public class GroupMessageController {
     @ApiOperation(value = "查询群聊消息")
     public BaseResponse<List<QueryGroupMessageVO>> queryGroupMessage(@PathVariable("activityId") Long activityId) {
         List<QueryGroupMessageVO> list = groupMessageService.queryGroupMessage(activityId);
+        return BaseResponse.success(list);
+    }
+
+    /**
+     * 查询最新群聊消息列表
+     */
+    @GetMapping("/queryGroupChatLatestMessage")
+    @ApiOperation(value = "查询最新群聊消息列表")
+    public BaseResponse<List<QueryGroupChatLatestMessageVO>> queryGroupChatLatestMessage() {
+        List<QueryGroupChatLatestMessageVO> list = groupMessageService.queryGroupChatLatestMessage();
         return BaseResponse.success(list);
     }
 }

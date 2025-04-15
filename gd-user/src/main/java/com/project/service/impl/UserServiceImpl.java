@@ -313,6 +313,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     /**
+     * 根据用户id查询用户名称
+     */
+    @Override
+    public String getUserName(Long userId) {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        User user = userMapper.selectOne(queryWrapper.select("user_name").eq("id", userId));
+        return user.getUserName();
+    }
+
+    /**
      * 上传头像
      * @param userId 用户id
      * @param file 文件数据

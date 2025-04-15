@@ -3,6 +3,7 @@ package com.project.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.project.domain.GroupMessage;
 import com.project.dto.message.GroupMessageDTO;
+import com.project.vo.message.QueryGroupChatLatestMessageVO;
 import com.project.vo.message.QueryGroupMessageVO;
 
 import java.util.List;
@@ -18,4 +19,9 @@ public interface GroupMessageService extends IService<GroupMessage> {
      * 存储群消息
      */
     boolean insertGroupMessage(GroupMessageDTO groupMessageDTO);
+
+    /**
+     * 查询最新群聊消息列表
+     */
+    List<QueryGroupChatLatestMessageVO> queryGroupChatLatestMessage();
 }

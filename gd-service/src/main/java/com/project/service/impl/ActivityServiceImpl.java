@@ -24,10 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -256,6 +253,49 @@ public class ActivityServiceImpl extends ServiceImpl<ActivityMapper, Activity>
         map.put("groupChat", records);
         map.put("total", queryActivityVOPage.getTotal());
         return map;
+    }
+
+    /**
+     * 查询用户所创建以及所参加的所有群聊的id
+     */
+    @Override
+    public Set<Long> queryActivityIdList(Long userId) {
+        // 查询我所创建的群聊id
+        QueryWrapper<Activity> queryWrapper = new QueryWrapper<>();
+        List<Activity> activityList = activityMapper.selectList(queryWrapper.select("id").eq("user_id", userId));
+        Set<Long> createActivityIdList = activityList.stream().map(Activity::getId).collect(Collectors.toSet());
+
+        // 查询我所参加的群聊id
+        Set<Long> addActivityIdList = activityRelationService.queryActivityIdList(userId);
+
+        // 合并
+        Set<Long> activityIdList = new HashSet<>();
+        activityIdList.addAll(createActivityIdList);
+        activityIdList.addAll(addActivityIdList);
+
+        return activityIdList;
+    }
+
+    /**
+     * 根据群id查询群名称和群头像
+     */
+    @Override
+    public Map<String, String> queryActivityNameAndPhoto(Long activityId) {
+        QueryWrapper<Activity> queryWrapper = new QueryWrapper<>();
+        Activity activity = activityMapper.selectOne(queryWrapper.select("activity_name", "activity_photo").eq("id", activityId));
+        Map<String, String> map = new HashMap<>();
+        map.put("activityName", activity.getActivityName());
+        map.put("activityPhoto", activity.getActivityPhoto());
+        return map;
+    }
+
+    /**
+     * 根据群id查询群创建用户id
+     */
+    @Override
+    public Long queryUserId(Long activityId) {
+        Activity activity = activityMapper.selectOne(new QueryWrapper<Activity>().select("user_id").eq("id", activityId));
+        return activity.getUserId();
     }
 
     /**

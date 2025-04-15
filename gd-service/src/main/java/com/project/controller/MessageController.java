@@ -45,7 +45,7 @@ public class MessageController {
      * 查询最新消息列表
      */
     @GetMapping("/queryNoReadList")
-    @ApiOperation(value = "查询未读消息列表")
+    @ApiOperation(value = "查询最新消息列表")
     public BaseResponse<List<QueryNoReadMessageVO>> queryNoReadListAndTotal() {
         List<QueryNoReadMessageVO> list = messageService.queryNoReadList();
         return BaseResponse.success(list);

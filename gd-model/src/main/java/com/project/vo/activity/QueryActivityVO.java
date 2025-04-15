@@ -17,6 +17,11 @@ public class QueryActivityVO implements Serializable {
     private Long id;
 
     /**
+     * 群聊创建人id
+     */
+    private Long userId;
+
+    /**
      * 群聊名称
      */
     private String activityName;

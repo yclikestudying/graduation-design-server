@@ -119,14 +119,31 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message>
     public List<QueryNoReadMessageVO> queryNoReadList() {
         // 获取自己的id
         Long userId = UserContext.getUserId();
+
         // 查询出给我发过消息的用户的id
         List<Message> messages = messageMapper.selectList(new QueryWrapper<Message>()
                 .select("send_user_id")
                 .eq("accept_user_id", userId));
         Set<Long> idList = messages.stream().map(Message::getSendUserId).collect(Collectors.toSet());
+
+        // 查询出我给别人发过消息的用户的id
+        List<Message> messages2 = messageMapper.selectList(new QueryWrapper<Message>()
+                .select("accept_user_id")
+                .eq("send_user_id", userId));
+        Set<Long> idList2 = messages2.stream().map(Message::getAcceptUserId).collect(Collectors.toSet());
+
+        // 合并
+        Set<Long> idSet = new HashSet<>();
+        idSet.addAll(idList);
+        idSet.addAll(idList2);
+        if (idSet.isEmpty()) {
+            log.error("查询最新消息列表 -----> 没有聊天消息");
+            throw new BusinessExceptionHandler(400, "没有聊天消息");
+        }
+
         // 根据 idList 和 userId 查询最新的一条消息集合
         List<QueryNoReadMessageVO> queryNoReadMessageVOS = new ArrayList<>();
-        idList.forEach(id -> {
+        idSet.forEach(id -> {
             // 每个与我聊过天的用户的最新一条消息
             queryNoReadMessageVOS.add(messageMapper.queryNoReadMessage(id, userId));
         });

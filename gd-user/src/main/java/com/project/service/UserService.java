@@ -54,6 +54,11 @@ public interface UserService extends IService<User> {
     String getAvatar(Long userId);
 
     /**
+     * 根据用户id查询用户名称
+     */
+    String getUserName(Long userId);
+
+    /**
      * 上传头像
      * @param userId 用户id
      * @param file 文件数据

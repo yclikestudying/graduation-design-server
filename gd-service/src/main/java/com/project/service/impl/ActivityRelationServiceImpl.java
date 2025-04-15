@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -108,6 +109,17 @@ public class ActivityRelationServiceImpl extends ServiceImpl<ActivityRelationMap
                 .select("user_id")
                 .eq("activity_id", activityId));
         return activityRelations.stream().map(ActivityRelation::getUserId).collect(Collectors.toList());
+    }
+
+    /**
+     * 查询用户所参加的群聊id
+     */
+    @Override
+    public Set<Long> queryActivityIdList(Long userId) {
+        // 查询用户所参加的群聊id
+        QueryWrapper<ActivityRelation> queryWrapper = new QueryWrapper<>();
+        List<ActivityRelation> activityRelations = activityRelationMapper.selectList(queryWrapper.select("activity_id").eq("user_id", userId));
+        return activityRelations.stream().map(ActivityRelation::getActivityId).collect(Collectors.toSet());
     }
 
     /**

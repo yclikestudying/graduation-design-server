@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public interface ActivityService extends IService<Activity> {
     /**
@@ -69,4 +70,19 @@ public interface ActivityService extends IService<Activity> {
      * 按时间搜索群聊
      */
     Map<String, Object> queryActivityByTime(String time, Integer current, Integer size);
+
+    /**
+     * 查询用户所创建以及所参加的所有群聊的id
+     */
+    Set<Long> queryActivityIdList(Long userId);
+
+    /**
+     * 根据群id查询群名称和群头像
+     */
+    Map<String, String> queryActivityNameAndPhoto(Long activityId);
+
+    /**
+     * 根据群id查询群创建用户id
+     */
+    Long queryUserId(Long activityId);
 }
