@@ -1,19 +1,14 @@
-package com.project.domain;
+package com.project.vo.problem;
 
-import com.baomidou.mybatisplus.annotation.*;
-
-import java.io.Serializable;
-import java.util.Date;
-
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
-/**
- * 问题反馈表
- * @TableName problem
- */
-@TableName(value ="problem")
+import java.util.Date;
 @Data
-public class Problem implements Serializable {
+public class QueryProblemVO {
     /**
      * 问题反馈表id
      */
@@ -43,19 +38,11 @@ public class Problem implements Serializable {
     /**
      * 反馈时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
     /**
      * 0-未处理，1-已处理
      */
     private Integer status;
-
-    /**
-     * 0-存在，1-删除
-     */
-    @TableLogic
-    private Integer isDelete;
-
-    @TableField(exist = false)
-    private static final long serialVersionUID = 1L;
 }
