@@ -7,18 +7,16 @@ import com.google.gson.Gson;
 import com.project.common.CodeEnum;
 import com.project.constant.RedisConstant;
 import com.project.constant.RoleConstant;
-import com.project.controller.UserController;
 import com.project.domain.User;
-import com.project.domain.Visitor;
 import com.project.dto.user.UserLoginRequest;
 import com.project.dto.user.UserRegisterRequest;
 import com.project.exception.BusinessExceptionHandler;
 import com.project.mapper.UserMapper;
+import com.project.service.PrivateSettingService;
 import com.project.service.UserService;
 import com.project.utils.*;
 import com.project.vo.user.QueryUserVO;
 import com.project.vo.user.UserVO;
-import com.project.vo.visit.QueryVisitVO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -35,6 +33,8 @@ import java.util.*;
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
     @Resource
     private UserMapper userMapper;
+    @Resource
+    private PrivateSettingService privateSettingService;
     @Resource
     private RedisUtil redisUtil;
     @Resource
@@ -87,6 +87,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             log.error("用户注册----->用户注册失败");
             throw new BusinessExceptionHandler(400, "用户注册失败");
         }
+
+        // 用户端的系统默认设置
+        Long userId = user.getId();
+        boolean result = privateSettingService.privateSetting(userId);
+        if (!result) {
+            log.error("用户注册 -----> 用户端系统默认设置配置失败");
+            throw new BusinessExceptionHandler(400, "用户端系统默认设置配置失败");
+        }
+
         return true;
     }
 

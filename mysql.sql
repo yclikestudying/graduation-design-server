@@ -47,8 +47,8 @@ create table if not exists goods
     user_id         bigint                             not null comment '发表用户id',
     goods_content   text                               null comment '商品内容',
     goods_photos    varchar(10240)                     null comment '商品图片',
-    goods_old_price decimal(10, 2)                             null comment '商品原价格',
-    goods_price     decimal(10, 2)                           null comment '商品新价格',
+    goods_old_price decimal(10, 2)                     null comment '商品原价格',
+    goods_price     decimal(10, 2)                     null comment '商品新价格',
     create_time     datetime default CURRENT_TIMESTAMP null comment '创建时间',
     is_show         tinyint  default 1                 not null comment '1-同意，0-拒绝',
     is_delete       tinyint  default 0                 not null comment '0-存在 1-已删除'
@@ -147,3 +147,28 @@ create table if not exists likes
     is_delete       int      default 0                 null comment '0-未删除 1-已删除',
     primary key (like_id)
 ) comment '点赞表';
+
+create table problem
+(
+    id              bigint auto_increment comment '问题反馈表id'
+        primary key,
+    user_id         bigint                             not null comment '反馈用户id',
+    problem_content text                               not null comment '问题内容',
+    problem_photo   varchar(1024)                      not null comment '问题图片',
+    contact_phone   varchar(11)                        null comment '联系电话',
+    create_time     datetime default CURRENT_TIMESTAMP null comment '反馈时间',
+    status          tinyint  default 0                 null comment '0-未处理，1-已处理',
+    is_delete       tinyint  default 0                 null comment '0-存在，1-删除'
+) comment '问题反馈表';
+
+create table private
+(
+    id               bigint auto_increment comment '隐私表主键'
+        primary key,
+    user_id          bigint               not null comment '用户id',
+    article_setting  tinyint(1) default 0 null comment '主页动态隐私设置',
+    goods_setting    tinyint(1) default 0 null comment '主页物品隐私设置',
+    express_setting  tinyint(1) default 0 null comment '主页跑腿隐私设置',
+    lost_setting     tinyint(1) default 0 null comment '主页寻物启事隐私设置',
+    activity_setting tinyint(1) default 0 null comment '主页群聊隐私设置'
+) comment '隐私表';
