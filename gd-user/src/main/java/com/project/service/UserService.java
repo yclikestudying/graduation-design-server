@@ -82,4 +82,14 @@ public interface UserService extends IService<User> {
      * @param userId 用户id
      */
     List<QueryUserVO> queryEach(Long userId);
+
+    /**
+     * 更改手机
+     */
+    boolean editPhone(String oldPhone, String newPhone);
+
+    /**
+     * 修改密码
+     */
+    boolean editPassword(String oldPassword, String newPassword, String checkPassword);
 }

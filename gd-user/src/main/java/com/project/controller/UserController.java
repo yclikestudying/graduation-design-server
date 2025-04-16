@@ -181,4 +181,24 @@ public class UserController {
         List<QueryUserVO> list = userService.queryEach(userId);
         return BaseResponse.success(list);
     }
+
+    /**
+     * 更改手机
+     */
+    @PutMapping ("/editPhone")
+    @ApiOperation(value = "更改手机")
+    public BaseResponse<String> editPhone(@RequestBody Map<String, String> map) {
+        boolean result = userService.editPhone(map.get("oldPhone"), map.get("newPhone"));
+        return result ? BaseResponse.success() : BaseResponse.fail();
+    }
+
+    /**
+     * 修改密码
+     */
+    @PutMapping("/editPassword")
+    @ApiOperation(value = "修改密码")
+    public BaseResponse<String> editPassword(@RequestBody Map<String, String> map) {
+        boolean result = userService.editPassword(map.get("oldPassword"), map.get("newPassword"), map.get("checkPassword"));
+        return result ? BaseResponse.success() : BaseResponse.fail();
+    }
 }

@@ -50,29 +50,36 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         String userPhone = userRegisterRequest.getUserPhone();
         String userPassword = userRegisterRequest.getUserPassword();
         String checkPassword = userRegisterRequest.getCheckPassword();
+
         // 校验密码和确认密码是否一致
         if (!Objects.equals(userPassword, checkPassword)) {
             log.error("用户注册----->两次密码不一致");
             throw new BusinessExceptionHandler(400, "两次密码不一致");
         }
+
         // 查询数据库用户注册是否重复
         Integer count = userMapper.selectCount(new QueryWrapper<User>().eq("user_phone", userPhone));
         if (count > 0) {
             log.error("用户注册----->用户已注册");
             throw new BusinessExceptionHandler(400, "用户已注册");
         }
+
         // 注册用户
         User user = new User();
         user.setUserPhone(userPhone);
         user.setUserPassword(MD5Util.calculateMD5(userPassword));
+
         // 查询用户数量设置用户默认名
         User one = userMapper.selectOne(new QueryWrapper<User>().select("id").orderByDesc("id").last("limit 1"));
         long count1 = one == null ? 0 : one.getId();
         user.setUserName("用户" + (count1 + 1));
+
         // todo 后续从表中查询管理员设置的用户默认头像
         user.setUserAvatar("https://campusmarket.oss-cn-chengdu.aliyuncs.com/avatar/2025-03-16/2e8ef60f-f1e5-459d-b56b-1725ac51f922Image_108900991352360.webp?Expires=4895722987&OSSAccessKeyId=LTAI5tHFTp1DAhhY5XMQb25q&Signature=F%2BakjrVe3dspXZ9ob2VzbqxzRhw%3D");
+
         // 用户默认简介
         user.setUserProfile("用户什么也没有留下");
+
         // 用户默认权限
         user.setUserRole(RoleConstant.ROLE_USER);
         int insert = userMapper.insert(user);
@@ -92,6 +99,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // 获取参数
         String userPhone = userLoginRequest.getUserPhone();
         String userPassword = userLoginRequest.getUserPassword();
+
         // 查询数据库登录用户是否已经注册
         User user = userMapper.selectOne(new QueryWrapper<User>().eq("user_phone", userPhone));
         if (user == null) {
@@ -99,17 +107,21 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             log.error("用户登录----->用户未注册");
             throw new BusinessExceptionHandler(CodeEnum.USER_NOT_REGISTER); // 用户未注册
         }
+
         // 已注册，校验加密密码
         if (!Objects.equals(MD5Util.calculateMD5(userPassword), user.getUserPassword())) {
             // 密码不一致，抛出异常
             log.error("用户登录----->用户或密码错误");
             throw new BusinessExceptionHandler(400, "用户或密码错误");
         }
+
         // 登录成功，生成 token
         String token = TokenUtil.createToken(user.getId(), user.getUserPhone());
+
         // 用户信息数据脱敏
         UserVO userVO = new UserVO();
         BeanUtils.copyProperties(user, userVO);
+
         // 存储 Redis
         redisUtil.setRedisData(RedisConstant.getRedisKey(RedisConstant.USER_TOKEN, user.getId()), token);
         redisUtil.setRedisData(RedisConstant.getRedisKey(RedisConstant.USER_INFO, user.getId()), gson.toJson(userVO));
@@ -452,6 +464,107 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             list.add(queryUserVO);
         });
         return list;
+    }
+
+    /**
+     * 更改手机
+     */
+    @Override
+    public boolean editPhone(String oldPhone, String newPhone) {
+        // 校验参数
+        if (StringUtils.isAnyBlank(oldPhone, newPhone)) {
+            log.error("更改手机 -----> 参数错误");
+            throw new BusinessExceptionHandler(400, "参数错误");
+        }
+
+        // 获取当前用户的id
+         Long userId = UserContext.getUserId();
+
+        // 查询当前用户的手机号码
+        User user = userMapper.selectOne(new QueryWrapper<User>()
+                .select("user_phone")
+                .eq("id", userId));
+        if (user == null) {
+            log.error("更改手机 -----> 用户不存在");
+            throw new BusinessExceptionHandler(400, "用户不存在");
+        }
+        String userPhone = user.getUserPhone();
+
+        // 与 oldPhone 进行校验
+        if (!Objects.equals(oldPhone, userPhone)) {
+            log.error("更改手机 -----> 旧手机输入错误");
+            throw new BusinessExceptionHandler(400, "旧手机输入错误");
+        }
+
+        // 验证新手机号格式
+        String phoneRegex = "^1[3-9]\\d{9}$";
+        if (!newPhone.matches(phoneRegex)) {
+            log.error("更改手机 -----> 新手机号格式错误");
+            throw new BusinessExceptionHandler(400, "新手机号格式错误");
+        }
+
+        // 旧手机号与新手机号进行校验
+        if (Objects.equals(oldPhone, newPhone)) {
+            log.error("更改手机 -----> 新手机号不能与旧手机号相同");
+            throw new BusinessExceptionHandler(400, "新手机号不能与旧手机号相同");
+        }
+
+        // 修改
+        boolean update = this.update(new UpdateWrapper<User>().set("user_phone", newPhone).eq("id", userId));
+        if (update) {
+            // 清除原来号码的token
+            String redisKey = RedisConstant.getRedisKey(RedisConstant.USER_TOKEN, userId);
+            redisUtil.redisTransaction(redisKey);
+        }
+        return update;
+    }
+
+    /**
+     * 修改密码
+     */
+    @Override
+    public boolean editPassword(String oldPassword, String newPassword, String checkPassword) {
+        // 校验参数
+        if (StringUtils.isAnyBlank(oldPassword, newPassword, checkPassword)) {
+            log.error("修改密码 -----> 参数错误");
+            throw new BusinessExceptionHandler(400, "参数错误");
+        }
+
+        // 获取当前用户的id
+        Long userId = UserContext.getUserId();
+
+        // 查询当前用户的密码
+        User user = userMapper.selectOne(new QueryWrapper<User>()
+                .select("user_password")
+                .eq("id", userId));
+        if (user == null) {
+            log.error("修改密码 -----> 用户不存在");
+            throw new BusinessExceptionHandler(400, "用户不存在");
+        }
+        String userPassword = user.getUserPassword();
+
+        // 校验旧密码
+        if (!Objects.equals(userPassword, MD5Util.calculateMD5(oldPassword))) {
+            log.error("修改密码 -----> 旧密码错误");
+            throw new BusinessExceptionHandler(400, "旧密码错误");
+        }
+
+        // 校验新密码格式
+        if (newPassword.length() < 6 || newPassword.length() > 18) {
+            log.error("修改密码 -----> 新密码长度应在6~18位");
+            throw new BusinessExceptionHandler(400, "新密码长度应在6~18位");
+        }
+
+        // 校验新密码与确认密码
+        if (!Objects.equals(newPassword, checkPassword)) {
+            log.error("修改密码 -----> 新密码与确认密码不相同");
+            throw new BusinessExceptionHandler(400, "新密码与确认密码不相同");
+        }
+
+        // 修改
+        return this.update(new UpdateWrapper<User>()
+                .set("user_password", MD5Util.calculateMD5(newPassword))
+                .eq("id", userId));
     }
 
     /**
